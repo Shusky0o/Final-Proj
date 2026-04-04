@@ -3,6 +3,7 @@
 
 import React, { useState } from 'react';
 import NewOrderModal from './NewOrderModal'; // Import the separated modal
+import Link from 'next/link';
 
 export default function AdminDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,7 +20,7 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-[#EAEFF9] via-[#FFFFFF] to-[#D9E2F3] flex flex-col font-sans text-black overflow-x-hidden relative">
+    <main className="h-screen overflow-hidden bg-gradient-to-br from-[#EAEFF9] via-[#FFFFFF] to-[#D9E2F3] flex flex-col font-sans text-black overflow-x-hidden relative">
       
       {/* 1. GLASS-HEADER */}
       <header className="sticky top-0 z-50 backdrop-blur-md bg-[#4475C4]/90 text-white px-12 py-6 flex items-center justify-between w-full shadow-2xl border-b border-white/20">
@@ -83,9 +84,11 @@ export default function AdminDashboard() {
               <span className="relative z-10">New Order</span>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
             </button>
-            <button className="bg-white text-[#4475C4] py-6 rounded-2xl font-black text-xl uppercase tracking-[0.2em] border-2 border-[#4475C4] transition-all hover:bg-[#4475C4] hover:text-white hover:scale-105 active:scale-95 shadow-lg">
+            <Link href="/records" className="w-full">
+            <button className="bg-white text-[#4475C4] py-6 rounded-2xl font-black text-xl uppercase tracking-[0.2em] border-2 border-[#4475C4] transition-all hover:bg-[#4475C4] hover:text-white hover:scale-105 active:scale-95 shadow-lg w-full">
               Record History
             </button>
+          </Link>
             <button className="bg-[#111827] text-white py-5 rounded-2xl font-bold text-sm uppercase tracking-widest transition-all hover:bg-black hover:scale-105 active:scale-95 shadow-xl">
               Financial Analysis & Disbursement
             </button>
