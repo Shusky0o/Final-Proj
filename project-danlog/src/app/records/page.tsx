@@ -19,22 +19,29 @@ export default function RecordsPage() {
   return (
     <main className="h-screen overflow-hidden bg-gradient-to-br from-[#EAEFF9] via-[#FFFFFF] to-[#D9E2F3] flex flex-col font-sans text-black relative">
 
+      {/* 1. HEADER (Date back to the right) */}
       <header className="sticky top-0 z-50 backdrop-blur-md bg-[#4475C4]/90 text-white px-12 py-6 flex items-center justify-between w-full shadow-2xl border-b border-white/20">
         <div className="flex items-center">
-          <Link href="/" className="mr-6 hover:scale-110 transition-transform bg-white/10 p-2 rounded-lg border border-white/20 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-              <path d="m15 18-6-6 6-6"/>
-            </svg>
-          </Link>
           <h1 className="text-3xl font-black italic tracking-tighter uppercase">HISTORY RECORD</h1>
         </div>
 
+        {/* DATE BACK ON TOP RIGHT */}
         <div className="bg-white/10 px-4 py-2 rounded-full border border-white/20 text-sm font-bold uppercase">
           MARCH 15, 2026
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto p-12 custom-scrollbar space-y-12">
+      {/* 2. SCROLLABLE CONTENT AREA */}
+      <div className="flex-1 overflow-y-auto p-12 custom-scrollbar space-y-8">
+        
+        {/* BACK BUTTON ROW (Aligned Right, Below Header) */}
+        <div className="max-w-[1700px] mx-auto w-full flex justify-end">
+          <Link href="/">
+            <button className="bg-[#4475C4] text-white px-8 py-3 rounded-xl font-bold uppercase tracking-widest hover:bg-[#3A5FA5] transition-all shadow-lg hover:shadow-xl">
+              ← Back
+            </button>
+          </Link>
+        </div>
         
         {/* Status Boards */}
         <div className="max-w-[1700px] mx-auto w-full grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -70,8 +77,8 @@ export default function RecordsPage() {
                     <p className="text-[10px] font-bold text-gray-400 uppercase">{item.id} • {item.loads} Loads</p>
                   </div>
                   <div className="flex gap-2">
-                    <button className="bg-white-500 text-black text-[9px] font-black px-3 py-2 rounded-lg shadow-md uppercase active:scale-90 transition-all">cancel</button>
-                    <button className="bg-[#6CCF9B] text-white text-[9px] font-black px-3 py-2 rounded-lg shadow-md uppercase active:scale-90 transition-all">complete</button>
+                    <button className="bg-white text-black text-[9px] font-black px-3 py-2 rounded-lg shadow-md uppercase active:scale-90 transition-all border border-gray-200 hover:bg-gray-50">cancel</button>
+                    <button className="bg-[#6CCF9B] text-white text-[9px] font-black px-3 py-2 rounded-lg shadow-md uppercase active:scale-90 transition-all hover:bg-[#5bb88a]">complete</button>
                   </div>
                 </div>
               ))}
@@ -88,9 +95,8 @@ export default function RecordsPage() {
           </div>
         </div>
 
-{/* DAILY TABLE */}
+        {/* DAILY TABLE */}
         <div className="max-w-[1700px] mx-auto w-full pb-20">
-
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
               <div className="w-2 h-8 bg-[#4475C4] rounded-full"></div>
