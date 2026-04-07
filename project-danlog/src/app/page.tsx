@@ -19,21 +19,24 @@ export default function AdminDashboard() {
     { name: "Guilaran, Red", id: "#108", loads: 6 },
   ];
 
+  // Uniform button style class - Matching "New Order" perfectly
+  const mainButtonStyle = "relative group bg-[#4475C4] text-white py-6 rounded-2xl font-black text-xl uppercase tracking-[0.2em] transition-all hover:scale-105 active:scale-95 shadow-[0_20px_50px_rgba(68,117,196,0.3)] overflow-hidden w-full flex items-center justify-center";
+
   return (
     <main className="h-screen overflow-hidden bg-gradient-to-br from-[#EAEFF9] via-[#FFFFFF] to-[#D9E2F3] flex flex-col font-sans text-black overflow-x-hidden relative">
       
-      {/* 1. GLASS-HEADER (Bigger Padding & Text) */}
+      {/* 1. GLASS-HEADER */}
       <header className="sticky top-0 z-50 backdrop-blur-md bg-[#4475C4]/90 text-white px-12 py-6 flex items-center justify-between w-full shadow-2xl border-b border-white/20">
         <div className="flex items-center">
           <h1 className="text-3xl font-black italic border-r-2 border-white/30 pr-6 mr-6 tracking-tighter uppercase">DANLOG</h1>
           <span className="text-2xl font-light opacity-80">Welcome, <span className="font-bold italic">Admin</span></span>
         </div>
-        <div className="bg-white/10 px-4 py-2 rounded-full border border-white/20 text-sm font-bold">
+        <div className="bg-white/10 px-4 py-2 rounded-full border border-white/20 text-sm font-bold uppercase">
           MARCH 15, 2026
         </div>
       </header>
 
-      {/* 2. MAIN HUB (P-12 for spaciousness) */}
+      {/* 2. MAIN HUB */}
       <div className="p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 w-full max-w-[1700px] mx-auto">
         
         {/* FINANCIAL PULSE */}
@@ -58,7 +61,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* CENTER: COMMAND CENTER (Bigger Logo & Buttons) */}
+        {/* CENTER: COMMAND CENTER */}
         <div className="lg:col-span-6 flex flex-col items-center justify-center gap-12">
           <div className="relative group">
             <div className="absolute -inset-1 bg-gradient-to-r from-[#4475C4] to-[#6CCF9B] rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
@@ -76,43 +79,46 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-6 w-full max-w-[400px]">
+          {/* IDENTICAL BUTTONS CONTAINER */}
+          <div className="flex flex-col gap-6 w-full max-w-[450px]">
             {/* New Order Button */}
-            <button 
-              onClick={() => setIsModalOpen(true)} 
-              className="relative group bg-[#4475C4] text-white py-6 rounded-2xl font-black text-xl uppercase tracking-[0.2em] transition-all hover:scale-105 active:scale-95 shadow-[0_20px_50px_rgba(68,117,196,0.3)] overflow-hidden w-full"
-            >
+            <button onClick={() => setIsModalOpen(true)} className={mainButtonStyle}>
               <span className="relative z-10">New Order</span>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
             </button>
 
             {/* Record History Button */}
             <Link href="/records" className="w-full">
-              <button className="bg-white text-[#4475C4] py-6 rounded-2xl font-black text-xl uppercase tracking-[0.2em] border-2 border-[#4475C4] transition-all hover:bg-[#4475C4] hover:text-white hover:scale-105 active:scale-95 shadow-lg w-full">
-                Record History
+              <button className={mainButtonStyle}>
+                <span className="relative z-10">Record History</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
               </button>
             </Link>
 
             {/* Financial Analysis Button */}
             <Link href="/financial" className="w-full">
-              <button className="bg-[#111827] text-white py-5 rounded-2xl font-bold text-sm uppercase tracking-widest transition-all hover:bg-black hover:scale-105 active:scale-95 shadow-xl w-full">
-                Financial Analysis & Disbursement
+              <button className={mainButtonStyle}>
+                <span className="relative z-10 text-lg">Financial Analysis</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
               </button>
             </Link>
           </div>
         </div>
 
-        {/* RIGHT: LIVE DATA */}
+        {/* RIGHT: LIVE DATA (Updated to Green) */}
         <div className="lg:col-span-3 flex flex-col gap-8">
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-2 h-8 bg-yellow-400 rounded-full"></div>
+            <div className="w-2 h-8 bg-blue-400 rounded-full"></div>
             <h2 className="text-xl font-black uppercase italic tracking-widest text-black">Live Ops</h2>
           </div>
 
-          <div className="bg-gradient-to-br from-yellow-400 to-orange-300 rounded-[2rem] p-8 shadow-xl text-black">
-            <p className="font-black text-xs tracking-widest uppercase mb-4 opacity-80">Pending Orders</p>
+          {/* MEDIUM BLUE Card - Solid & High Contrast */}
+          <div className="bg-[#7BA7E1] rounded-[2rem] p-8 shadow-xl text-black">
+            <p className="font-black text-xs tracking-widest uppercase mb-4 opacity-70">Pending Orders</p>
             <p className="text-8xl font-black tracking-tighter">06</p>
-            <p className="mt-4 font-bold bg-white/30 w-fit px-4 py-1 rounded-full text-xs uppercase">Action Required</p>
+            <div className="mt-4 font-black bg-black/15 w-fit px-4 py-1 rounded-full text-[10px] uppercase">
+              Action Required
+            </div>
           </div>
 
           <div className="bg-white/80 backdrop-blur-md rounded-[2rem] shadow-2xl overflow-hidden border border-white">
@@ -125,7 +131,7 @@ export default function AdminDashboard() {
                 <thead>
                   <tr className="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-100">
                     <th className="pb-3 pl-2">Name</th>
-                    <th className="pb-3 text-center">Order ID</th>
+                    <th className="pb-3 text-center">ID</th>
                     <th className="pb-3 text-right pr-2">Loads</th>
                   </tr>
                 </thead>
@@ -144,7 +150,6 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* --- RENDER SEPARATED MODAL --- */}
       <NewOrderModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
