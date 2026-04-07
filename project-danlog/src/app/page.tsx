@@ -7,6 +7,29 @@ import Link from 'next/link';
 
 export default function AdminDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Reminder States
+  const [showReminders, setShowReminders] = useState(false);
+  const [reminders, setReminders] = useState([
+    { id: 1, text: "Check detergent stock", completed: false },
+    { id: 2, text: "Call maintenance for Dryer B", completed: true }
+  ]);
+  const [newReminder, setNewReminder] = useState("");
+
+  const addReminder = (e) => {
+    e.preventDefault();
+    if (!newReminder.trim()) return;
+    setReminders([...reminders, { id: Date.now(), text: newReminder, completed: false }]);
+    setNewReminder("");
+  };
+
+  const toggleReminder = (id) => {
+    setReminders(reminders.map(r => r.id === id ? { ...r, completed: !r.completed } : r));
+  };
+
+  const deleteReminder = (id) => {
+    setReminders(reminders.filter(r => r.id !== id));
+  };
 
   const customers = [
     { name: "Soph M.", id: "#101", loads: 1 },
@@ -19,20 +42,78 @@ export default function AdminDashboard() {
     { name: "Guilaran, Red", id: "#108", loads: 6 },
   ];
 
-  // Uniform button style class - Matching "New Order" perfectly
   const mainButtonStyle = "relative group bg-[#4475C4] text-white py-6 rounded-2xl font-black text-xl uppercase tracking-[0.2em] transition-all hover:scale-105 active:scale-95 shadow-[0_20px_50px_rgba(68,117,196,0.3)] overflow-hidden w-full flex items-center justify-center";
 
   return (
     <main className="h-screen overflow-hidden bg-gradient-to-br from-[#EAEFF9] via-[#FFFFFF] to-[#D9E2F3] flex flex-col font-sans text-black overflow-x-hidden relative">
       
-      {/* 1. GLASS-HEADER */}
-      <header className="sticky top-0 z-50 backdrop-blur-md bg-[#4475C4]/90 text-white px-12 py-6 flex items-center justify-between w-full shadow-2xl border-b border-white/20">
+      {/* 1. SOLID HEADER with REMINDER FEATURE */}
+      <header className="sticky top-0 z-50 bg-[#4475C4] text-white px-12 py-6 flex items-center justify-between w-full shadow-lg">
         <div className="flex items-center">
           <h1 className="text-3xl font-black italic border-r-2 border-white/30 pr-6 mr-6 tracking-tighter uppercase">DANLOG</h1>
           <span className="text-2xl font-light opacity-80">Welcome, <span className="font-bold italic">Admin</span></span>
         </div>
-        <div className="bg-white/10 px-4 py-2 rounded-full border border-white/20 text-sm font-bold uppercase">
-          MARCH 15, 2026
+
+        <div className="flex items-center gap-4 relative">
+          {/* REMINDER BUTTON */}
+          <button 
+            onClick={() => setShowReminders(!showReminders)}
+            className={`px-4 py-2 rounded-full border border-white/20 text-sm font-bold uppercase transition-all flex items-center gap-2 ${showReminders ? 'bg-white text-[#4475C4]' : 'bg-white/10 hover:bg-white/20'}`}
+          >
+            <span>Reminders</span>
+            {reminders.filter(r => !r.completed).length > 0 && (
+              <span className="bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
+                {reminders.filter(r => !r.completed).length}
+              </span>
+            )}
+          </button>
+
+          <div className="bg-white/10 px-4 py-2 rounded-full border border-white/20 text-sm font-bold uppercase">
+            MARCH 15, 2026
+          </div>
+
+          {/* REMINDER DROPDOWN */}
+          {showReminders && (
+            <div className="absolute top-full mt-4 right-0 w-80 bg-white rounded-3xl shadow-2xl p-6 text-black border border-gray-100 animate-in fade-in slide-in-from-top-2 duration-200">
+              <h3 className="font-black uppercase italic text-[#4475C4] mb-4 text-xs tracking-widest">Admin Checklist</h3>
+              
+              <form onSubmit={addReminder} className="mb-4 flex gap-2">
+                <input 
+                  type="text" 
+                  value={newReminder}
+                  onChange={(e) => setNewReminder(e.target.value)}
+                  placeholder="New task..."
+                  className="flex-1 bg-gray-100 rounded-xl px-4 py-2 text-sm outline-none focus:ring-2 ring-[#4475C4]/20"
+                />
+                <button type="submit" className="bg-[#4475C4] text-white w-10 h-10 rounded-xl font-bold">+</button>
+              </form>
+
+              <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
+                {reminders.length === 0 && <p className="text-center py-4 text-gray-400 text-xs italic">No reminders yet</p>}
+                {reminders.map(reminder => (
+                  <div key={reminder.id} className="flex items-center justify-between group">
+                    <div className="flex items-center gap-3">
+                      <input 
+                        type="checkbox" 
+                        checked={reminder.completed} 
+                        onChange={() => toggleReminder(reminder.id)}
+                        className="w-4 h-4 accent-[#4475C4]"
+                      />
+                      <span className={`text-sm font-bold ${reminder.completed ? 'line-through text-gray-300' : 'text-gray-700'}`}>
+                        {reminder.text}
+                      </span>
+                    </div>
+                    <button 
+                      onClick={() => deleteReminder(reminder.id)}
+                      className="text-red-400 opacity-0 group-hover:opacity-100 transition-opacity text-xs font-bold"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </header>
 
@@ -79,15 +160,12 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* IDENTICAL BUTTONS CONTAINER */}
           <div className="flex flex-col gap-6 w-full max-w-[450px]">
-            {/* New Order Button */}
             <button onClick={() => setIsModalOpen(true)} className={mainButtonStyle}>
               <span className="relative z-10">New Order</span>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
             </button>
 
-            {/* Record History Button */}
             <Link href="/records" className="w-full">
               <button className={mainButtonStyle}>
                 <span className="relative z-10">Record History</span>
@@ -95,7 +173,6 @@ export default function AdminDashboard() {
               </button>
             </Link>
 
-            {/* Financial Analysis Button */}
             <Link href="/financial" className="w-full">
               <button className={mainButtonStyle}>
                 <span className="relative z-10 text-lg">Financial Analysis</span>
@@ -105,14 +182,13 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* RIGHT: LIVE DATA (Updated to Green) */}
+        {/* RIGHT: LIVE DATA */}
         <div className="lg:col-span-3 flex flex-col gap-8">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-2 h-8 bg-blue-400 rounded-full"></div>
             <h2 className="text-xl font-black uppercase italic tracking-widest text-black">Live Ops</h2>
           </div>
 
-          {/* MEDIUM BLUE Card - Solid & High Contrast */}
           <div className="bg-[#7BA7E1] rounded-[2rem] p-8 shadow-xl text-black">
             <p className="font-black text-xs tracking-widest uppercase mb-4 opacity-70">Pending Orders</p>
             <p className="text-8xl font-black tracking-tighter">06</p>
