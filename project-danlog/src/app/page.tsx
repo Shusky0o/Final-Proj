@@ -175,7 +175,7 @@ export default function AdminDashboard() {
 
             <Link href="/financial" className="w-full">
               <button className={mainButtonStyle}>
-                <span className="relative z-10 text-lg">Financial Analysis and Disbursement</span>
+                <span className="relative z-10 text-lg">Financial Analysis</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
               </button>
             </Link>

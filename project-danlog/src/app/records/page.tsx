@@ -20,7 +20,7 @@ export default function RecordsPage() {
     <main className="h-screen overflow-hidden bg-gradient-to-br from-[#EAEFF9] via-[#FFFFFF] to-[#D9E2F3] flex flex-col font-sans text-black relative">
 
       {/* 1. HEADER (Date back to the right) */}
-      <header className="sticky top-0 z-50 backdrop-blur-md bg-[#4475C4]/90 text-white px-12 py-6 flex items-center justify-between w-full shadow-2xl border-b border-white/20">
+      <header className="sticky top-0 z-50 bg-[#4475C4] text-white px-12 py-6 flex items-center justify-between w-full shadow-lg">
         <div className="flex items-center">
           <h1 className="text-3xl font-black italic border-r-2 border-white/30 pr-6 mr-6 tracking-tighter uppercase">DANLOG</h1>
           <span className="text-2xl font-light opacity-80">Record <span className="font-bold italic">History</span></span>

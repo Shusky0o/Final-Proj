@@ -79,11 +79,16 @@ export default function FinancialAnalysis() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-[#EAEFF9] via-[#FFFFFF] to-[#D9E2F3] flex flex-col font-sans text-black">
       
-      {/* HEADER */}
-      <header className="sticky top-0 z-50 backdrop-blur-md bg-[#4475C4]/90 text-white px-12 py-6 flex items-center justify-between w-full shadow-2xl">
+      {/* 1. HEADER (Uniform with RecordsPage) */}
+      <header className="sticky top-0 z-50 bg-[#4475C4] text-white px-12 py-6 flex items-center justify-between w-full shadow-lg">
         <div className="flex items-center">
           <h1 className="text-3xl font-black italic border-r-2 border-white/30 pr-6 mr-6 tracking-tighter uppercase">DANLOG</h1>
           <span className="text-2xl font-light opacity-80">Financial <span className="font-bold italic">Dashboard</span></span>
+        </div>
+
+        {/* DATE BADGE ON TOP RIGHT */}
+        <div className="bg-white/10 px-4 py-2 rounded-full border border-white/20 text-sm font-bold uppercase">
+          MARCH 15, 2026
         </div>
       </header>
 
@@ -101,7 +106,7 @@ export default function FinancialAnalysis() {
             </select>
           </div>
           <Link href="/" className="ml-auto">
-            <button className="bg-[#4475C4] text-white px-8 py-3 rounded-xl font-bold uppercase tracking-widest shadow-lg hover:bg-[#355ea3] transition-all">← Back</button>
+            <button className="bg-[#4475C4] text-white px-8 py-3 rounded-xl font-bold uppercase tracking-widest hover:bg-[#3A5FA5] transition-all shadow-lg hover:shadow-xl">← Back</button>
           </Link>
         </div>
 
