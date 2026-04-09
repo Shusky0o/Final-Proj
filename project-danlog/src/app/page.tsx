@@ -145,7 +145,7 @@ export default function AdminDashboard() {
         {/* LEFT: THE PULSE - SEPARATED CARDS */}
         <div className="lg:col-span-3 flex flex-col gap-6 overflow-y-auto pr-2 custom-scrollbar">
           <section className="space-y-6">
-            <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-gray-400 pl-2">Operational Pulse</h2>
+            <h2 className="text-[15px] font-black uppercase tracking-[0.3em] text-gray-400 pl-2">Operational Pulse</h2>
             
             <div className="bg-[#4475C4] rounded-[2.5rem] p-8 text-white shadow-2xl shadow-[#4475C4]/40 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-10 -mt-10 blur-2xl"></div>
@@ -210,7 +210,9 @@ export default function AdminDashboard() {
         {/* RIGHT: LIVE STATUS */}
         <div className="lg:col-span-5 flex flex-col h-full">
           <div className="flex items-center justify-between mb-6 px-4">
-            <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-gray-400">Live Status</h2>
+            <h2 className="text-[15px] font-[1000] uppercase tracking-[0.4em] text-[#4475C4] leading-none">
+            Customer History
+          </h2>
             <div className="flex items-center gap-2 bg-green-100 px-3 py-1 rounded-full text-green-600">
                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
                <span className="text-[10px] font-black uppercase">System Online</span>
