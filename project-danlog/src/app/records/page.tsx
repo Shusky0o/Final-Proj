@@ -17,17 +17,25 @@ export default function RecordsPage() {
   ];
 
   return (
-    <main className="h-screen overflow-hidden bg-gradient-to-br from-[#EAEFF9] via-[#FFFFFF] to-[#D9E2F3] flex flex-col font-sans text-black relative">
+    <main className="h-screen overflow-hidden bg-[#F0F4FA] flex flex-col font-sans text-black relative">
 
-      {/* 1. HEADER (Date back to the right) */}
-      <header className="sticky top-0 z-50 bg-[#4475C4] text-white px-12 py-6 flex items-center justify-between w-full shadow-lg">
-        <div className="flex items-center">
-          <h1 className="text-3xl font-black italic border-r-2 border-white/30 pr-6 mr-6 tracking-tighter uppercase">DANLOG</h1>
-          <span className="text-2xl font-light opacity-80">Record <span className="font-bold italic">History</span></span>
+      {/* 1. UPDATED HEADER - CLEAN WHITE STYLE (Matching Main Page) */}
+      <header className="z-[100] bg-white px-12 py-5 flex items-center justify-between w-full border-b border-gray-100 sticky top-0">
+        <div className="flex items-center gap-6">
+          <Link href="/">
+            <div className="bg-[#4475C4] text-white w-12 h-12 flex items-center justify-center rounded-2xl shadow-lg shadow-[#4475C4]/30 rotate-3 hover:rotate-0 transition-transform cursor-pointer">
+              <h1 className="text-2xl font-black italic tracking-tighter uppercase leading-none">DL</h1>
+            </div>
+          </Link>
+          <div className="flex flex-col">
+            <h1 className="text-[10px] font-black tracking-[0.4em] text-[#4475C4] uppercase leading-tight opacity-70">Danlog System</h1>
+            <div className="flex items-center gap-2">
+              <span className="text-2xl font-black text-[#1A2B47] tracking-tight">Record <span className="text-[#4475C4]">History</span></span>
+            </div>
+          </div>
         </div>
 
-        {/* DATE BACK ON TOP RIGHT */}
-        <div className="bg-white/10 px-4 py-2 rounded-full border border-white/20 text-sm font-bold uppercase">
+        <div className="bg-[#1A2B47] text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest shadow-md">
           MARCH 15, 2026
         </div>
       </header>
@@ -35,16 +43,16 @@ export default function RecordsPage() {
       {/* 2. SCROLLABLE CONTENT AREA */}
       <div className="flex-1 overflow-y-auto p-12 custom-scrollbar space-y-8">
         
-        {/* BACK BUTTON ROW (Aligned Right, Below Header) */}
+        {/* UPDATED BACK BUTTON - BOLD AND MINIMAL */}
         <div className="max-w-[1700px] mx-auto w-full flex justify-end">
           <Link href="/">
-            <button className="bg-[#4475C4] text-white px-8 py-3 rounded-xl font-bold uppercase tracking-widest hover:bg-[#3A5FA5] transition-all shadow-lg hover:shadow-xl">
-              ← Back
+            <button className="bg-white border-2 border-[#4475C4] text-[#4475C4] px-8 py-3 rounded-2xl font-[1000] uppercase tracking-widest hover:bg-[#4475C4] hover:text-white transition-all shadow-lg active:scale-95">
+              ← Dashboard
             </button>
           </Link>
         </div>
         
-        {/* Status Boards */}
+        {/* Status Boards (Original Structure) */}
         <div className="max-w-[1700px] mx-auto w-full grid grid-cols-1 md:grid-cols-3 gap-8">
           
           {/* PENDING */}
@@ -96,7 +104,7 @@ export default function RecordsPage() {
           </div>
         </div>
 
-        {/* DAILY TABLE */}
+        {/* DAILY TABLE (Original Structure) */}
         <div className="max-w-[1700px] mx-auto w-full pb-20">
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
