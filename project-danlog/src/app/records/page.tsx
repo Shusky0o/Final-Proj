@@ -5,7 +5,8 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 
 export default function RecordsPage() {
-  const dailyRecords = [
+  // 1. Move records into state so they are dynamic
+  const [records, setRecords] = useState([
     { id: "#108", name: "Guilaran, Red", loads: 6, time: "10:30 AM", status: "Ready" },
     { id: "#107", name: "Sdani", loads: 1, time: "10:15 AM", status: "Ready" },
     { id: "#106", name: "Ilon Ziv", loads: 2, time: "09:45 AM", status: "In Queue" },
@@ -14,12 +15,19 @@ export default function RecordsPage() {
     { id: "#103", name: "Ahron A.", loads: 2, time: "08:30 AM", status: "Completed" },
     { id: "#102", name: "Wilhelm", loads: 3, time: "08:15 AM", status: "Completed" },
     { id: "#101", name: "Soph M.", loads: 1, time: "08:00 AM", status: "Completed" },
-  ];
+  ]);
+
+  // 2. Logic to move records between columns
+  const updateStatus = (id, newStatus) => {
+    setRecords(prev => prev.map(record => 
+      record.id === id ? { ...record, status: newStatus } : record
+    ));
+  };
 
   return (
     <main className="h-screen overflow-hidden bg-[#F0F4FA] flex flex-col font-sans text-black relative">
 
-      {/* 1. UPDATED HEADER - CLEAN WHITE STYLE (Matching Main Page) */}
+      {/* 1. HEADER */}
       <header className="z-[100] bg-white px-12 py-5 flex items-center justify-between w-full border-b border-gray-100 sticky top-0">
         <div className="flex items-center gap-6">
           <Link href="/">
@@ -35,15 +43,14 @@ export default function RecordsPage() {
           </div>
         </div>
 
-        <div className="bg-[#1A2B47] text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest shadow-md">
+        <div className="bg-[#1A2B47] text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest shadow-md italic">
           MARCH 15, 2026
         </div>
       </header>
 
-      {/* 2. SCROLLABLE CONTENT AREA */}
+      {/* 2. SCROLLABLE CONTENT */}
       <div className="flex-1 overflow-y-auto p-12 custom-scrollbar space-y-8">
         
-        {/* UPDATED BACK BUTTON - BOLD AND MINIMAL */}
         <div className="max-w-[1700px] mx-auto w-full flex justify-end">
           <Link href="/">
             <button className="bg-white border-2 border-[#4475C4] text-[#4475C4] px-8 py-3 rounded-2xl font-[1000] uppercase tracking-widest hover:bg-[#4475C4] hover:text-white transition-all shadow-lg active:scale-95">
@@ -52,59 +59,79 @@ export default function RecordsPage() {
           </Link>
         </div>
         
-        {/* Status Boards (Original Structure) */}
         <div className="max-w-[1700px] mx-auto w-full grid grid-cols-1 md:grid-cols-3 gap-8">
           
-          {/* PENDING */}
+          {/* PENDING COLUMN */}
           <div className="bg-white/70 backdrop-blur-md rounded-[2rem] shadow-xl overflow-hidden border border-white flex flex-col">
             <div className="bg-[#B4C7E7] py-5 text-center">
               <h2 className="text-xl font-black uppercase italic text-[#2D4B7A] tracking-wider">Pending</h2>
             </div>
             <div className="p-6 space-y-4">
-              {dailyRecords.filter(r => r.status === "In Queue").map((item) => (
-                <div key={item.id} className="flex justify-between items-center p-4 bg-white/50 rounded-2xl border border-gray-100 shadow-sm">
+              {records.filter(r => r.status === "In Queue").map((item) => (
+                <div key={item.id} className="flex justify-between items-center p-4 bg-white/50 rounded-2xl border border-gray-100 shadow-sm animate-in fade-in slide-in-from-left-4 duration-300">
                   <div>
                     <p className="font-black text-lg">{item.name}</p>
                     <p className="text-[10px] font-bold text-gray-400 uppercase">{item.id} • {item.loads} Loads</p>
                   </div>
-                  <button className="bg-[#4475C4] text-white text-[10px] font-black px-4 py-3 rounded-xl shadow-md uppercase active:scale-95 transition-all">Set Ready</button>
+                  <button 
+                    onClick={() => updateStatus(item.id, "Ready")}
+                    className="bg-[#4475C4] text-white text-[10px] font-black px-4 py-3 rounded-xl shadow-md uppercase active:scale-95 transition-all hover:bg-[#355ea3]"
+                  >
+                    Set Ready
+                  </button>
                 </div>
               ))}
+              {records.filter(r => r.status === "In Queue").length === 0 && (
+                <p className="text-center text-gray-300 font-bold italic py-10">No pending items</p>
+              )}
             </div>
           </div>
 
-          {/* READY */}
+          {/* READY COLUMN */}
           <div className="bg-white/70 backdrop-blur-md rounded-[2rem] shadow-xl overflow-hidden border border-white flex flex-col">
             <div className="bg-[#A9D18E] py-5 text-center">
               <h2 className="text-xl font-black uppercase italic text-[#385723] tracking-wider">Ready</h2>
             </div>
             <div className="p-6 space-y-4">
-              {dailyRecords.filter(r => r.status === "Ready").map((item) => (
-                <div key={item.id} className="flex justify-between items-center p-4 bg-white/50 rounded-2xl border border-gray-100 shadow-sm">
+              {records.filter(r => r.status === "Ready").map((item) => (
+                <div key={item.id} className="flex justify-between items-center p-4 bg-white/50 rounded-2xl border border-gray-100 shadow-sm animate-in fade-in slide-in-from-right-4 duration-300">
                   <div>
                     <p className="font-black text-lg">{item.name}</p>
                     <p className="text-[10px] font-bold text-gray-400 uppercase">{item.id} • {item.loads} Loads</p>
                   </div>
                   <div className="flex gap-2">
-                    <button className="bg-white text-black text-[9px] font-black px-3 py-2 rounded-lg shadow-md uppercase active:scale-90 transition-all border border-gray-200 hover:bg-gray-50">cancel</button>
-                    <button className="bg-[#6CCF9B] text-white text-[9px] font-black px-3 py-2 rounded-lg shadow-md uppercase active:scale-90 transition-all hover:bg-[#5bb88a]">complete</button>
+                    <button 
+                      onClick={() => updateStatus(item.id, "In Queue")}
+                      className="bg-white text-black text-[9px] font-black px-3 py-2 rounded-lg shadow-md uppercase active:scale-90 transition-all border border-gray-200 hover:bg-red-50 hover:text-red-500 hover:border-red-100"
+                    >
+                      back
+                    </button>
+                    <button 
+                      onClick={() => updateStatus(item.id, "Completed")}
+                      className="bg-[#6CCF9B] text-white text-[9px] font-black px-3 py-2 rounded-lg shadow-md uppercase active:scale-90 transition-all hover:bg-[#5bb88a]"
+                    >
+                      complete
+                    </button>
                   </div>
                 </div>
               ))}
+              {records.filter(r => r.status === "Ready").length === 0 && (
+                <p className="text-center text-gray-300 font-bold italic py-10">No items ready</p>
+              )}
             </div>
           </div>
 
           {/* TOTAL STATS */}
           <div className="bg-white/70 backdrop-blur-md rounded-[2rem] shadow-xl p-8 flex flex-col items-center justify-center border border-white">
-             <div className="w-20 h-20 bg-[#4475C4] rounded-full flex items-center justify-center text-white text-3xl font-black mb-4 shadow-lg">
-                {dailyRecords.length}
+             <div className="w-20 h-20 bg-[#4475C4] rounded-full flex items-center justify-center text-white text-3xl font-black mb-4 shadow-lg shadow-[#4475C4]/30">
+                {records.length}
              </div>
              <p className="text-3xl font-black tracking-tighter text-[#4475C4]">TOTAL ORDERS</p>
              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-2 italic">Daily Performance</p>
           </div>
         </div>
 
-        {/* DAILY TABLE (Original Structure) */}
+        {/* DAILY TABLE */}
         <div className="max-w-[1700px] mx-auto w-full pb-20">
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
@@ -134,8 +161,8 @@ export default function RecordsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {dailyRecords.map((record, index) => (
-                  <tr key={index} className="hover:bg-white/50 transition-colors group">
+                {records.map((record, index) => (
+                  <tr key={record.id} className="hover:bg-white/50 transition-colors group">
                     <td className="px-8 py-6 font-black text-lg text-gray-800">{record.name}</td>
                     <td className="px-8 py-6 text-center font-bold text-gray-400 italic">{record.id}</td>
                     <td className="px-8 py-6 text-center">
@@ -143,8 +170,10 @@ export default function RecordsPage() {
                     </td>
                     <td className="px-8 py-6 text-center font-bold text-gray-500">{record.time}</td>
                     <td className="px-8 py-6 text-right">
-                      <span className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-sm ${
-                        record.status === 'Completed' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-[#4475C4]'
+                      <span className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-sm transition-colors ${
+                        record.status === 'Completed' ? 'bg-green-100 text-green-700' : 
+                        record.status === 'Ready' ? 'bg-green-50 text-green-500 border border-green-100' :
+                        'bg-blue-100 text-[#4475C4]'
                       }`}>
                         {record.status}
                       </span>

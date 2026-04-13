@@ -240,14 +240,14 @@ export default function FinancialAnalysis() {
                       </div>
                       
                       <div className="md:border-l md:border-r border-gray-50 px-2">
-                        <p className="text-[9px] font-black text-gray-300 uppercase mb-1 tracking-widest">Disbursements</p>
+                        <p className="text-[21px] font-black text-gray-300 uppercase mb-1 tracking-widest">Disbursements</p>
                         <div className="flex flex-wrap gap-2">
                           {dailyExpenses.length > 0 ? dailyExpenses.map((exp, idx) => (
                             <div key={idx} className="bg-red-50 px-3 py-1 rounded-lg border border-red-100">
                               <span className="text-[10px] font-black text-red-600">₱{exp.amount}</span>
                               <span className="text-[9px] font-bold text-gray-400 ml-2 uppercase italic">{exp.description}</span>
                             </div>
-                          )) : <span className="text-[10px] font-bold text-gray-200 italic">None</span>}
+                          )) : <span className="text-[20px] font-bold text-gray-200 italic">None</span>}
                         </div>
                       </div>
 
