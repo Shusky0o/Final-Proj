@@ -21,7 +21,7 @@ export default function NewOrderModal({ isOpen, onClose }: NewOrderModalProps) {
       <div className="relative bg-white rounded-[2.5rem] shadow-2xl w-full max-w-2xl overflow-hidden border border-white transform transition-all animate-in zoom-in duration-300">
         {/* Modal Header */}
         <div className="bg-[#4475C4] p-8 text-white">
-          <h2 className="text-3xl font-black italic uppercase tracking-tighter">New Order Entry</h2>
+          <h2 className="text-3xl font-black Arial uppercase tracking-tighter">New Order Entry</h2>
           <p className="text-xs font-bold opacity-80 uppercase tracking-widest mt-1">Input customer details below</p>
         </div>
 

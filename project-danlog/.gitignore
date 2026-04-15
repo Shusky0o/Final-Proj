@@ -50,3 +50,5 @@ next-env.d.ts
 # database like SQLite locally
 *.db
 *.db-journal
+*storybook.log
+storybook-static

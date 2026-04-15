@@ -3,9 +3,12 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { RecordsHeader } from '../../components/RecordsHeader';
+import { StatusTracker } from '../../components/StatusTracker';
+import { DailyLogTable } from '../../components/DailyLogTable';
 
 export default function RecordsPage() {
-  const dailyRecords = [
+  const [records, setRecords] = useState([
     { id: "#108", name: "Guilaran, Red", loads: 6, time: "10:30 AM", status: "Ready" },
     { id: "#107", name: "Sdani", loads: 1, time: "10:15 AM", status: "Ready" },
     { id: "#106", name: "Ilon Ziv", loads: 2, time: "09:45 AM", status: "In Queue" },
@@ -14,132 +17,29 @@ export default function RecordsPage() {
     { id: "#103", name: "Ahron A.", loads: 2, time: "08:30 AM", status: "Completed" },
     { id: "#102", name: "Wilhelm", loads: 3, time: "08:15 AM", status: "Completed" },
     { id: "#101", name: "Soph M.", loads: 1, time: "08:00 AM", status: "Completed" },
-  ];
+  ]);
+
+  const updateStatus = (id, newStatus) => {
+    setRecords(prev => prev.map(record => 
+      record.id === id ? { ...record, status: newStatus } : record
+    ));
+  };
 
   return (
-    <main className="h-screen overflow-hidden bg-gradient-to-br from-[#EAEFF9] via-[#FFFFFF] to-[#D9E2F3] flex flex-col font-sans text-black relative">
+    <main className="h-screen overflow-hidden bg-[#F0F4FA] flex flex-col font-sans text-black relative">
+      <RecordsHeader />
 
-      <header className="sticky top-0 z-50 backdrop-blur-md bg-[#4475C4]/90 text-white px-12 py-6 flex items-center justify-between w-full shadow-2xl border-b border-white/20">
-        <div className="flex items-center">
-          <Link href="/" className="mr-6 hover:scale-110 transition-transform bg-white/10 p-2 rounded-lg border border-white/20 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-              <path d="m15 18-6-6 6-6"/>
-            </svg>
+      <div className="flex-1 overflow-y-auto p-12 custom-scrollbar space-y-8">
+        <div className="max-w-[1700px] mx-auto w-full flex justify-end">
+          <Link href="/">
+            <button className="bg-white border-2 border-[#4475C4] text-[#4475C4] px-8 py-3 rounded-2xl font-[1000] uppercase tracking-widest hover:bg-[#4475C4] hover:text-white transition-all shadow-lg active:scale-95">
+              ← Dashboard
+            </button>
           </Link>
-          <h1 className="text-3xl font-black italic tracking-tighter uppercase">HISTORY RECORD</h1>
         </div>
 
-        <div className="bg-white/10 px-4 py-2 rounded-full border border-white/20 text-sm font-bold uppercase">
-          MARCH 15, 2026
-        </div>
-      </header>
-
-      <div className="flex-1 overflow-y-auto p-12 custom-scrollbar space-y-12">
-        
-        {/* Status Boards */}
-        <div className="max-w-[1700px] mx-auto w-full grid grid-cols-1 md:grid-cols-3 gap-8">
-          
-          {/* PENDING */}
-          <div className="bg-white/70 backdrop-blur-md rounded-[2rem] shadow-xl overflow-hidden border border-white flex flex-col">
-            <div className="bg-[#B4C7E7] py-5 text-center">
-              <h2 className="text-xl font-black uppercase italic text-[#2D4B7A] tracking-wider">Pending</h2>
-            </div>
-            <div className="p-6 space-y-4">
-              {dailyRecords.filter(r => r.status === "In Queue").map((item) => (
-                <div key={item.id} className="flex justify-between items-center p-4 bg-white/50 rounded-2xl border border-gray-100 shadow-sm">
-                  <div>
-                    <p className="font-black text-lg">{item.name}</p>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase">{item.id} • {item.loads} Loads</p>
-                  </div>
-                  <button className="bg-[#4475C4] text-white text-[10px] font-black px-4 py-3 rounded-xl shadow-md uppercase active:scale-95 transition-all">Set Ready</button>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* READY */}
-          <div className="bg-white/70 backdrop-blur-md rounded-[2rem] shadow-xl overflow-hidden border border-white flex flex-col">
-            <div className="bg-[#A9D18E] py-5 text-center">
-              <h2 className="text-xl font-black uppercase italic text-[#385723] tracking-wider">Ready</h2>
-            </div>
-            <div className="p-6 space-y-4">
-              {dailyRecords.filter(r => r.status === "Ready").map((item) => (
-                <div key={item.id} className="flex justify-between items-center p-4 bg-white/50 rounded-2xl border border-gray-100 shadow-sm">
-                  <div>
-                    <p className="font-black text-lg">{item.name}</p>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase">{item.id} • {item.loads} Loads</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <button className="bg-white-500 text-black text-[9px] font-black px-3 py-2 rounded-lg shadow-md uppercase active:scale-90 transition-all">cancel</button>
-                    <button className="bg-[#6CCF9B] text-white text-[9px] font-black px-3 py-2 rounded-lg shadow-md uppercase active:scale-90 transition-all">complete</button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* TOTAL STATS */}
-          <div className="bg-white/70 backdrop-blur-md rounded-[2rem] shadow-xl p-8 flex flex-col items-center justify-center border border-white">
-             <div className="w-20 h-20 bg-[#4475C4] rounded-full flex items-center justify-center text-white text-3xl font-black mb-4 shadow-lg">
-                {dailyRecords.length}
-             </div>
-             <p className="text-3xl font-black tracking-tighter text-[#4475C4]">TOTAL ORDERS</p>
-             <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-2 italic">Daily Performance</p>
-          </div>
-        </div>
-
-{/* DAILY TABLE */}
-        <div className="max-w-[1700px] mx-auto w-full pb-20">
-
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-8 bg-[#4475C4] rounded-full"></div>
-              <h2 className="text-2xl font-black uppercase italic tracking-widest text-[#4475C4]">Daily Log Sheet</h2>
-            </div>
-
-            <div className="flex items-center gap-4 bg-white/80 backdrop-blur-sm px-6 py-2 rounded-2xl shadow-xl border border-white">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">View History:</span>
-              <input 
-                type="date" 
-                className="bg-transparent text-[#4475C4] font-bold outline-none cursor-pointer text-lg" 
-                defaultValue="2026-03-15" 
-              />
-            </div>
-          </div>
-
-          <div className="bg-white/80 backdrop-blur-md rounded-[2.5rem] shadow-2xl overflow-hidden border border-white">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-[#111827] text-white uppercase text-[11px] font-black tracking-[0.2em]">
-                  <th className="px-8 py-6">Customer Name</th>
-                  <th className="px-8 py-5 text-center">Order ID</th>
-                  <th className="px-8 py-5 text-center">Total Loads</th>
-                  <th className="px-8 py-5 text-center">Time Logged</th>
-                  <th className="px-8 py-5 text-right">Final Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {dailyRecords.map((record, index) => (
-                  <tr key={index} className="hover:bg-white/50 transition-colors group">
-                    <td className="px-8 py-6 font-black text-lg text-gray-800">{record.name}</td>
-                    <td className="px-8 py-6 text-center font-bold text-gray-400 italic">{record.id}</td>
-                    <td className="px-8 py-6 text-center">
-                      <span className="bg-[#4475C4]/10 text-[#4475C4] px-4 py-2 rounded-xl font-black text-sm">{record.loads}</span>
-                    </td>
-                    <td className="px-8 py-6 text-center font-bold text-gray-500">{record.time}</td>
-                    <td className="px-8 py-6 text-right">
-                      <span className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-sm ${
-                        record.status === 'Completed' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-[#4475C4]'
-                      }`}>
-                        {record.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <StatusTracker records={records} onUpdateStatus={updateStatus} />
+        <DailyLogTable records={records} />
       </div>
 
       <style jsx>{`
