@@ -5,7 +5,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import NewOrderModal from './NewOrderModal'; 
 import { DashboardHeader } from '../components/DashboardHeader';
 import { StatsPulse } from '../components/StatsPulse';
-import { CommandCenter } from '../components/CommandCenter'; // Assuming you made this file too
+import { CommandCenter } from '../components/CommandCenter';
 import { CustomerHistory } from '../components/CustomerHistory';
 
 export default function AdminDashboard() {
