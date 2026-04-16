@@ -34,7 +34,7 @@ export const CommandCenter = ({ onNewOrder }) => {
             <button className={secondaryButtonStyle}><LogIcon /> Record Log</button>
           </Link>
           <Link href="/financial" className="w-full">
-            <button className={secondaryButtonStyle}><ChartIcon /> Analytics</button>
+            <button className={secondaryButtonStyle}><ChartIcon /> Financial Analysis</button>
           </Link>
         </div>
       </div>
