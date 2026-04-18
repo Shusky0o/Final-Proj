@@ -40,19 +40,19 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <main className="h-screen overflow-hidden bg-[#F0F4FA] flex flex-col font-sans text-black relative text-sm">
+    <main className="min-h-screen overflow-y-auto bg-[#F0F4FA] flex flex-col font-sans text-black relative text-sm pb-20">
       <DashboardHeader 
         reminders={reminders} showReminders={showReminders} setShowReminders={setShowReminders}
         reminderRef={reminderRef} newReminder={newReminder} setNewReminder={setNewReminder}
         addReminder={addReminder} toggleReminder={toggleReminder} deleteReminder={deleteReminder}
       />
 
-      <div className="p-10 grid grid-cols-1 lg:grid-cols-12 gap-10 w-full max-w-[1900px] mx-auto flex-1 overflow-hidden">
-        <div className="lg:col-span-3"><StatsPulse /></div>
-        <div className="lg:col-span-4 flex items-center justify-center">
+      <div className="p-6 md:p-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 md:gap-10 w-full max-w-[1900px] mx-auto">
+        <div className="md:col-span-2 lg:col-span-3"><StatsPulse /></div>
+        <div className="md:col-span-2 lg:col-span-4 flex items-center justify-center">
           <CommandCenter onNewOrder={() => setIsModalOpen(true)} />
         </div>
-        <div className="lg:col-span-5"><CustomerHistory customers={customers} /></div>
+        <div className="md:col-span-2 lg:col-span-5"><CustomerHistory customers={customers} /></div>
       </div>
 
       <NewOrderModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
