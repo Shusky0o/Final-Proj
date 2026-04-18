@@ -1,7 +1,7 @@
 // @ts-nocheck
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { FinancialSummary } from '../../components/FinancialSummary';
 import { ExpenseModal } from '../../components/ExpenseModal';
@@ -9,14 +9,18 @@ import { MonthlyTimelineModal } from '../../components/MonthlyTimelineModal';
 
 export default function FinancialAnalysis() {
   // 1. STATE MANAGEMENT
-  const [selectedYear, setSelectedYear] = useState('2026');
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
   const [showDisbursementModal, setShowDisbursementModal] = useState(false);
   const [activePopUpMonth, setActivePopUpMonth] = useState(null);
   const [expenseForm, setExpenseForm] = useState({
-    description: '',
+    name: '',
     amount: '',
-    date: ''
+    transaction_date: ''
   });
+  const [disbursementItems, setDisbursementItems] = useState([]);
+  const [disbursementData, setDisbursementData] = useState({});
+  const [revenueData, setRevenueData] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   // 2. CONSTANTS & DATA
   const years = Array.from({ length: 11 }, (_, i) => (2025 + i).toString());
@@ -34,37 +38,43 @@ export default function FinancialAnalysis() {
     return mIdx > CURRENT_MONTH_IDX;
   };
 
-  const revenueData = {
-    2026: {
-      January: { daily: 1280, total: 38400 },
-      February: { daily: 1450, total: 40600 },
-      March: { daily: 1720, total: 51600 },
-      April: { daily: 1560, total: 46800 },
-      May: { daily: 0, total: 0 }, June: { daily: 0, total: 0 }, July: { daily: 0, total: 0 },
-      August: { daily: 0, total: 0 }, September: { daily: 0, total: 0 }, October: { daily: 0, total: 0 },
-      November: { daily: 0, total: 0 }, December: { daily: 0, total: 0 },
-    }
+  // const revenueData = {
+  //   2026: {
+  //     January: { daily: 1280, total: 38400 },
+  //     February: { daily: 1450, total: 40600 },
+  //     March: { daily: 1720, total: 51600 },
+  //     April: { daily: 1560, total: 46800 },
+  //     May: { daily: 0, total: 0 }, June: { daily: 0, total: 0 }, July: { daily: 0, total: 0 },
+  //     August: { daily: 0, total: 0 }, September: { daily: 0, total: 0 }, October: { daily: 0, total: 0 },
+  //     November: { daily: 0, total: 0 }, December: { daily: 0, total: 0 },
+  //   }
+  // };
+
+  const transformData = (apiData: any) => {
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+
+    const result: Record<string, { amount: number }> = {};
+
+    apiData.monthly.forEach((item: any) => {
+      const monthName = monthNames[item.month - 1];
+      result[monthName] = { amount: item.total };
+    });
+
+    return result;
   };
 
-  const disbursementData = {
-    'January': { amount: 15000 }, 'February': { amount: 16200 }, 'March': { amount: 18900 },
-    'April': { amount: 17500 }, 'May': { amount: 0 }, 'June': { amount: 0 },
-    'July': { amount: 0 }, 'August': { amount: 0 }, 'September': { amount: 0 },
-    'October': { amount: 0 }, 'November': { amount: 0 }, 'December': { amount: 0 },
-  };
-
-  const disbursementItems = [
-    { date: 'March 1, 2026', description: '4 box of Detergent', amount: 760 },
-    { date: 'March 6, 2026', description: '3 tanks of Gasoline', amount: 2861 },
-    { date: 'March 19, 2026', description: '5 bags of plastics', amount: 312 },
-    { date: 'March 22, 2026', description: '4 box of Detergent', amount: 760 },
-    { date: 'March 31, 2026', description: '2 baskets', amount: 140 },
-  ];
-
-  const handleSaveExpense = (e) => {
+  const handleSaveExpense = async (e) => {
     e.preventDefault();
     setShowDisbursementModal(false);
-    setExpenseForm({ description: '', amount: '', date: '' });
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/disbursement`, {
+      method: 'POST', 
+      headers: { 'Content-Type': 'application/json' }, 
+      body: JSON.stringify(expenseForm)});
+    setExpenseForm({ name: '', amount: '', transaction_date: '' });
   };
 
   const getDaysInMonth = (monthName) => {
@@ -73,8 +83,33 @@ export default function FinancialAnalysis() {
   };
 
   // 4. CALCULATIONS
-  const totalAnnualRevenue = Object.values(revenueData[selectedYear] || {}).reduce((sum, m) => sum + m.total, 0);
+  const totalAnnualRevenue = Object.values(revenueData).reduce((sum, month) => sum + month.amount, 0);
+
+
   const totalAnnualDisbursement = Object.keys(disbursementData).reduce((sum, month) => sum + disbursementData[month].amount, 0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/disbursement/total/year?year=${selectedYear}`);
+        const res2 = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/total/year?year=${selectedYear}`);
+        const data = await res.json();
+        const data2 = await res2.json();
+
+        const transformed = transformData(data);
+        const transformedRev = transformData(data2);
+
+        setDisbursementData(transformed);
+        setRevenueData(transformedRev);
+        setIsLoading(false);
+
+      }
+      catch (error) {console.error("Error fetching disbursement data:", error);}
+    }
+    fetchData();
+
+  }, [selectedYear]);
 
   return (
     <main className="h-screen overflow-hidden bg-gradient-to-br from-[#EAEFF9] via-[#FFFFFF] to-[#D9E2F3] flex flex-col font-sans text-black relative">
@@ -128,7 +163,8 @@ export default function FinancialAnalysis() {
         <FinancialSummary 
           revenue={totalAnnualRevenue} 
           disbursement={totalAnnualDisbursement} 
-          onLogExpense={() => setShowDisbursementModal(true)} 
+          onLogExpense={() => setShowDisbursementModal(true)}
+          isLoading={isLoading}
         />
 
         {/* MONTHLY BREAKDOWN TABLE */}
@@ -151,7 +187,7 @@ export default function FinancialAnalysis() {
               <tbody className="text-[14px]">
                 {months.map((month) => {
                   const rowIsFuture = isFuture(selectedYear, month);
-                  const rev = revenueData[selectedYear]?.[month]?.total || 0;
+                  const rev = revenueData[month]?.amount || 0;
                   const exp = disbursementData[month]?.amount || 0;
                   
                   return (
@@ -195,7 +231,6 @@ export default function FinancialAnalysis() {
         onClose={() => setActivePopUpMonth(null)}
         getDaysInMonth={getDaysInMonth}
         revenueData={revenueData}
-        disbursementItems={disbursementItems}
       />
 
       <style jsx>{`

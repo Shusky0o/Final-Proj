@@ -54,8 +54,8 @@ export const DashboardHeader = ({
                 {reminders.map(r => (
                   <div key={r.id} className="flex items-center justify-between p-3 bg-gray-50/50 rounded-2xl">
                     <div className="flex items-center gap-3">
-                      <input type="checkbox" checked={r.completed} onChange={() => toggleReminder(r.id)} className="w-5 h-5 accent-[#4475C4]" />
-                      <span className={`text-sm font-bold ${r.completed ? 'line-through text-gray-300' : 'text-gray-700'}`}>{r.text}</span>
+                      <input type="checkbox" checked={r.is_done} onChange={() => toggleReminder(r.id)} className="w-5 h-5 accent-[#4475C4]" />
+                      <span className={`text-sm font-bold ${r.is_done ? 'line-through text-gray-300' : 'text-gray-700'}`}>{r.task}</span>
                     </div>
                     <button onClick={() => deleteReminder(r.id)} className="p-2 text-red-500 bg-red-50 rounded-lg"><TrashIcon /></button>
                   </div>
@@ -64,7 +64,7 @@ export const DashboardHeader = ({
             </div>
           )}
         </div>
-        <div className="bg-[#1A2B47] text-white px-5 py-2.5 rounded-xl text-xs font-black">MARCH 15, 2026</div>
+        <div className="bg-[#1A2B47] text-white px-5 py-2.5 rounded-xl text-xs font-black">{new Date().toLocaleDateString()}</div>
       </div>
     </header>
   );
