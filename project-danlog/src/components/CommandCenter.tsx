@@ -9,7 +9,9 @@ const ChartIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" heigh
 
 export const CommandCenter = ({ onNewOrder }) => {
   const mainButtonStyle = "z-50 relative group bg-[#4475C4] hover:bg-[#365fa1] text-white p-6 md:p-8 lg:p-5 rounded-[3rem] font-black text-lg uppercase tracking-[0.2em] transition-all duration-300 hover:scale-[1.02] active:scale-95 shadow-2xl shadow-[#4475C4]/40 overflow-hidden w-full flex items-center justify-center gap-3";
-  const secondaryButtonStyle = "z-50 relative flex items-center justify-center gap-2 w-full p-6 md:p-8 lg:p-5 bg-white border-2 border-[#4475C4] rounded-[3rem] font-black text-[11px] uppercase tracking-widest text-[#4475C4] hover:bg-[#4475C4] hover:text-white transition-all shadow-lg hover:shadow-[#4475C4]/20";
+  
+  // Added min-h-[70px] and flex-1 to ensure both buttons are identical thickness
+  const secondaryButtonStyle = "z-50 relative flex items-center justify-center gap-2 w-full min-h-[70px] p-4 bg-white border-2 border-[#4475C4] rounded-[3rem] font-black text-[11px] uppercase tracking-widest text-[#4475C4] hover:bg-[#4475C4] hover:text-white transition-all shadow-lg hover:shadow-[#4475C4]/20 whitespace-nowrap";
 
   return (
     <div className="w-full max-w-[420px] space-y-6 md:space-y-10">
@@ -29,12 +31,20 @@ export const CommandCenter = ({ onNewOrder }) => {
         <button onClick={onNewOrder} className={mainButtonStyle}>
           <PlusIcon /> <span>New Order</span>
         </button>
-        <div className="grid grid-cols-2 gap-4">
-          <Link href="/records" className="w-full">
-            <button className={secondaryButtonStyle}><LogIcon /> Record Log</button>
+        
+        {/* Using items-stretch to force both columns to match height */}
+        <div className="grid grid-cols-2 gap-4 items-stretch">
+          <Link href="/records" className="flex">
+            <button className={secondaryButtonStyle}>
+              <LogIcon /> 
+              <span>Record Log</span>
+            </button>
           </Link>
-          <Link href="/financial" className="w-full">
-            <button className={secondaryButtonStyle}><ChartIcon /> Financial Analysis</button>
+          <Link href="/financial" className="flex">
+            <button className={secondaryButtonStyle}>
+              <ChartIcon /> 
+              <span>Financial Analysis</span>
+            </button>
           </Link>
         </div>
       </div>
