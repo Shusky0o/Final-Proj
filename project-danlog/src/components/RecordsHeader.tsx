@@ -2,6 +2,15 @@
 import React from 'react';
 import Link from 'next/link';
 
+const dateOptions = { 
+  weekday: 'long', 
+  year: 'numeric', 
+  month: 'long', 
+  day: 'numeric' 
+};
+const currentDate = new Date().toLocaleDateString('en-US', dateOptions);
+
+
 export const RecordsHeader = () => (
   <header className="z-[100] bg-white px-12 py-5 flex items-center justify-between w-full border-b border-gray-100 sticky top-0">
     <div className="flex items-center gap-6">
@@ -18,7 +27,7 @@ export const RecordsHeader = () => (
       </div>
     </div>
     <div className="bg-[#1A2B47] text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest shadow-md italic">
-      MARCH 15, 2026
+      {currentDate}
     </div>
   </header>
 );
