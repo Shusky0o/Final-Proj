@@ -1,23 +1,26 @@
 // @ts-nocheck
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { RecordsHeader } from '../../components/RecordsHeader';
 import { StatusTracker } from '../../components/StatusTracker';
 import { DailyLogTable } from '../../components/DailyLogTable';
+import { fetchRecordLogs } from '../../services/laundryService';
 
 export default function RecordsPage() {
-  const [records, setRecords] = useState([
-    { id: "#108", name: "Guilaran, Red", loads: 6, time: "10:30 AM", status: "Ready" },
-    { id: "#107", name: "Sdani", loads: 1, time: "10:15 AM", status: "Ready" },
-    { id: "#106", name: "Ilon Ziv", loads: 2, time: "09:45 AM", status: "In Queue" },
-    { id: "#105", name: "Jaja", loads: 4, time: "09:20 AM", status: "In Queue" },
-    { id: "#104", name: "Minatozaki Sana", loads: 2, time: "08:50 AM", status: "Completed" },
-    { id: "#103", name: "Ahron A.", loads: 2, time: "08:30 AM", status: "Completed" },
-    { id: "#102", name: "Wilhelm", loads: 3, time: "08:15 AM", status: "Completed" },
-    { id: "#101", name: "Soph M.", loads: 1, time: "08:00 AM", status: "Completed" },
-  ]);
+  const [records, setRecords] = useState([]); // empty sa start
+  const [loading, setLoading] = useState(true);
+
+  // runs when the page opens on your tablet
+  useEffect(() => {
+    const loadData = async () => {
+      const data = await fetchRecordLogs();
+      setRecords(data);
+      setLoading(false);
+    };
+    loadData();
+  }, []);
 
   const updateStatus = (id, newStatus) => {
     setRecords(prev => prev.map(record => 
@@ -38,8 +41,18 @@ export default function RecordsPage() {
           </Link>
         </div>
 
-        <StatusTracker records={records} onUpdateStatus={updateStatus} />
-        <DailyLogTable records={records} />
+        {loading ? (
+          <div className="flex items-center justify-center h-64">
+            <p className="text-[#4475C4] font-black animate-pulse uppercase tracking-[0.2em]">
+              Synchronizing with Database...
+            </p>
+          </div>
+        ) : (
+          <>
+            <StatusTracker records={records} onUpdateStatus={updateStatus} />
+            <DailyLogTable records={records} />
+          </>
+        )}
       </div>
 
       <style jsx>{`
