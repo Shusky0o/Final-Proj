@@ -13,7 +13,7 @@ export const RecordsHeader = () => (
       <div className="flex flex-col">
         <h1 className="text-[10px] font-black tracking-[0.4em] text-[#4475C4] uppercase leading-tight opacity-70">Danlog System</h1>
         <div className="flex items-center gap-2">
-          <span className="text-2xl font-black text-[#1A2B47] tracking-tight">Record <span className="text-[#4475C4]">History</span></span>
+          <span className="text-2xl font-black text-[#1A2B47] tracking-tight">Record <span className="text-[#4475C4]">Log</span></span>
         </div>
       </div>
     </div>
