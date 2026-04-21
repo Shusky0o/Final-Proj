@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React from 'react';
+import { formatDate } from '../lib/dateFormatter';
 
 const TrashIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -8,15 +9,8 @@ const TrashIcon = () => (
   </svg>
 );
 
-const dateOptions = { 
-  weekday: 'long', 
-  year: 'numeric', 
-  month: 'long', 
-  day: 'numeric' 
-};
-const currentDate = new Date().toLocaleDateString('en-US', dateOptions);
-
 export const DashboardHeader = ({ 
+  pageTitle = "Welcome, Admin!",
   reminders, 
   showReminders, 
   setShowReminders, 
@@ -31,15 +25,15 @@ export const DashboardHeader = ({
     <header className="z-[100] bg-white px-12 py-5 flex items-center justify-between w-full border-b border-gray-100 sticky top-0">
       <div className="flex items-center gap-6">
         {/* DL Logo Container */}
-        <div className="bg-[#4475C4] text-white w-12 h-12 flex items-center justify-center rounded-2xl shadow-lg shadow-[#4475C4]/30 rotate-3 transition-transform cursor-pointer">
-          <h1 className="text-2xl font-black italic uppercase leading-none">DL</h1>
+        <div className="bg-[#4475C4] text-white w-12 h-12 flex items-center justify-center rounded-2xl shadow-lg shadow-[#4475C4]/30 rotate-3 hover:rotate-0 transition-transform cursor-pointer">
+          <h1 className="text-2xl font-black italic tracking-tighter uppercase leading-none">DL</h1>
         </div>
         
-        {/* System & Welcome Text */}
+        {/* System & Page Title */}
         <div className="flex flex-col">
           <h1 className="text-[10px] font-black tracking-[0.4em] text-[#4475C4] uppercase leading-tight opacity-70">Danlog System</h1>
           <div className="flex items-center gap-2">
-             <span className="text-2xl font-black text-[#1A2B47] tracking-tight">Welcome, <span className="text-[#4475C4]">Admin!</span></span>
+             <span className="text-2xl font-black text-[#1A2B47] tracking-tight">{pageTitle}</span>
              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
           </div>
         </div>
@@ -75,8 +69,8 @@ export const DashboardHeader = ({
                 <button type="submit" className="bg-[#4475C4] text-white w-10 h-10 rounded-xl font-bold">+</button>
               </form>
               <div className="space-y-3 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
-                {reminders.map(r => (
-                  <div key={r.id} className="flex items-center justify-between p-3 bg-gray-50/50 rounded-2xl">
+                {reminders.map((r, index) => (
+                  <div key={`${r.id}-${index}`} className="flex items-center justify-between p-3 bg-gray-50/50 rounded-2xl">
                     <div className="flex items-center gap-3">
                       <input type="checkbox" checked={r.is_done} onChange={() => toggleReminder(r.id)} className="w-5 h-5 accent-[#4475C4]" />
                       <span className={`text-sm font-bold ${r.is_done ? 'line-through text-gray-300' : 'text-gray-700'}`}>{r.task}</span>
@@ -91,9 +85,9 @@ export const DashboardHeader = ({
           )}
         </div>
 
-        {/* Dynamic Date Box - Matching RecordsHeader Style */}
+        {/* Dynamic Date Box - Day Name Only */}
         <div className="bg-[#1A2B47] text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest shadow-md italic">
-          {currentDate}
+          {formatDate()}
         </div>
       </div>
     </header>

@@ -1,3 +1,5 @@
+// src/lib/dateFormatter.ts
+
 const months: Record<string, number> = {
   jan: 1, january: 1,
   feb: 2, february: 2,
@@ -15,4 +17,19 @@ const months: Record<string, number> = {
 
 export function getMonthNumber(monthName: string) {
   return months[monthName.toLowerCase()] ?? null;
-};
+}
+
+export function formatDate(): string {
+  const options: Intl.DateTimeFormatOptions = { 
+    weekday: 'long', 
+    month: 'long', 
+    day: 'numeric', 
+    year: 'numeric' 
+  };
+  
+  // This will give you "Tuesday, April 21, 2026"
+  const dateStr = new Date().toLocaleDateString('en-US', options);
+  
+  // .toUpperCase() makes it "TUESDAY, APRIL 21, 2026"
+  return dateStr.toUpperCase();
+}

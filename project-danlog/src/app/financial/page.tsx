@@ -117,26 +117,6 @@ export default function FinancialAnalysis() {
       {/* BACKGROUND VISUAL LAYER */}
       <div className="absolute inset-0 z-0 opacity-[0.015] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M100 100l-100 -100h200z' fill='%234475C4'/%3E%3C/svg%3E")`, backgroundSize: '150px' }}></div>
 
-      {/* HEADER */}
-      <header className="z-[100] bg-white/95 backdrop-blur-sm px-12 py-5 flex items-center justify-between w-full border-b border-gray-100 sticky top-0 shadow-sm">
-        <div className="flex items-center gap-6">
-          <Link href="/">
-            <div className="bg-[#4475C4] text-white w-12 h-12 flex items-center justify-center rounded-2xl shadow-lg shadow-[#4475C4]/30 rotate-3 hover:rotate-0 transition-transform cursor-pointer">
-              <h1 className="text-2xl font-black italic tracking-tighter uppercase leading-none">DL</h1>
-            </div>
-          </Link>
-          <div className="flex flex-col">
-            <h1 className="text-[10px] font-black tracking-[0.4em] text-[#4475C4] uppercase leading-tight opacity-70">Danlog System</h1>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-black text-[#1A2B47] tracking-tight">Financial <span className="text-[#4475C4]">Analysis</span></span>
-            </div>
-          </div>
-        </div>
-        <div className="bg-[#1A2B47] text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest shadow-md italic">
-          MARCH 15, 2026
-        </div>
-      </header>
-
       {/* CONTENT */}
       <div className="flex-1 overflow-y-auto p-12 custom-scrollbar space-y-8 relative z-10">
         

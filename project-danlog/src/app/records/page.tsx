@@ -3,7 +3,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { RecordsHeader } from '../../components/RecordsHeader';
 import { StatusTracker } from '../../components/StatusTracker';
 import { DailyLogTable } from '../../components/DailyLogTable';
 import { DeleteModal } from '../../components/DeleteModal'; 
@@ -55,8 +54,6 @@ export default function RecordsPage() {
 
   return (
     <main className="h-screen overflow-hidden bg-[#F0F4FA] flex flex-col font-sans text-black relative">
-      <RecordsHeader />
-      
       <div className="flex-1 overflow-y-auto p-12 custom-scrollbar space-y-8">
         
         {/* RESTORED: Dashboard Navigation Button */}
