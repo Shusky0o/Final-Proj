@@ -53,8 +53,8 @@ export default function RecordsPage() {
   };
 
   return (
-    <main className="h-screen overflow-hidden bg-[#F0F4FA] flex flex-col font-sans text-black relative">
-      <div className="flex-1 overflow-y-auto p-12 custom-scrollbar space-y-8">
+    <main className="h-auto bg-[#F0F4FA] flex flex-col font-sans text-black relative">
+      <div className="p-12 custom-scrollbar space-y-8">
         
         {/* RESTORED: Dashboard Navigation Button */}
         <div className="max-w-[1700px] mx-auto w-full flex justify-end">

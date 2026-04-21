@@ -60,7 +60,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <main className="min-h-screen overflow-y-auto bg-[#F0F4FA] flex flex-col font-sans text-black relative text-sm pb-20">
+    <main className="h-auto bg-[#F0F4FA] flex flex-col font-sans text-black relative text-sm pb-20">
       <div className="p-6 md:p-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 md:gap-10 w-full max-w-[1900px] mx-auto">
         <div className="md:col-span-2 lg:col-span-3"><StatsPulse /></div>
         <div className="md:col-span-2 lg:col-span-4 flex items-center justify-center">

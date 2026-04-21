@@ -112,13 +112,18 @@ export default function FinancialAnalysis() {
   }, [selectedYear]);
 
   return (
-    <main className="h-screen overflow-hidden bg-gradient-to-br from-[#EAEFF9] via-[#FFFFFF] to-[#D9E2F3] flex flex-col font-sans text-black relative">
+    <main className="h-auto bg-gradient-to-br from-[#EAEFF9] via-[#FFFFFF] to-[#D9E2F3] flex flex-col font-sans text-black relative">
       
       {/* BACKGROUND VISUAL LAYER */}
-      <div className="absolute inset-0 z-0 opacity-[0.015] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M100 100l-100 -100h200z' fill='%234475C4'/%3E%3C/svg%3E")`, backgroundSize: '150px' }}></div>
-
+    <div 
+        className="absolute inset-0 z-0 opacity-[0.015] pointer-events-none" 
+        style={{ 
+          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M100 100l-100 -100h200z' fill='%234475C4'/%3E%3C/svg%3E")`, 
+          backgroundSize: '150px' 
+        }}
+      ></div>
       {/* CONTENT */}
-      <div className="flex-1 overflow-y-auto p-12 custom-scrollbar space-y-8 relative z-10">
+      <div className="p-12 custom-scrollbar space-y-8 relative z-10">
         
         {/* YEAR SELECTION & BACK */}
         <div className="max-w-[1700px] mx-auto w-full flex justify-between items-center">
