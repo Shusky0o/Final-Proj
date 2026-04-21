@@ -3,7 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useEffect, useRef } from "react";
 
-export function CustomerHistory({ customers, fetchMore, hasMore }) {
+export function CustomerHistory({ customers, fetchMore, hasMore, loadingMore }) {
   const scrollRef = useRef(null);
   const bottomRef = useRef(null);
 
@@ -13,7 +13,7 @@ export function CustomerHistory({ customers, fetchMore, hasMore }) {
     const observer = new IntersectionObserver(
       (entries) => {
         console.log("Observer fired", entries[0].isIntersecting);
-        if (entries[0].isIntersecting && hasMore) {
+        if (entries[0].isIntersecting && hasMore && !loadingMore) {
           console.log("Fetching more...");
           fetchMore();
         }

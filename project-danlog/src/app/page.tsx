@@ -23,6 +23,8 @@ export default function AdminDashboard() {
 
         const result = await res.json();
         setCustomers(result.data);
+        setCursor(result.nextCursor);     // ✅ ADD THIS
+        setHasMore(result.hasMore);   
 
       } catch (err) {
         console.error("Failed to fetch orders:", err);
@@ -49,7 +51,15 @@ export default function AdminDashboard() {
       const res = await fetch(url.toString());
       const result = await res.json();
 
-      setCustomers((prev) => [...prev, ...result.data]);
+      setCustomers((prev) => {
+        const merged = [...prev, ...result.data];
+
+        const unique = Array.from(
+          new Map(merged.map(item => [item.id, item])).values()
+        );
+
+        return unique;
+      });
       setCursor(result.nextCursor);
       setHasMore(result.hasMore);
     } catch (err) {
@@ -66,7 +76,7 @@ export default function AdminDashboard() {
         <div className="md:col-span-2 lg:col-span-4 flex items-center justify-center">
           <CommandCenter onNewOrder={() => setIsModalOpen(true)} />
         </div>
-        <div className="lg:col-span-5"><CustomerHistory customers={customers} fetchMore={fetchMore} hasMore={hasMore} /></div>
+        <div className="lg:col-span-5"><CustomerHistory customers={customers} fetchMore={fetchMore} hasMore={hasMore} loadingMore={loadingMore}/></div>
       </div>
 
       <NewOrderModal 
