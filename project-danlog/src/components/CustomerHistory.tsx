@@ -54,9 +54,9 @@ export function CustomerHistory({ customers, fetchMore, hasMore, loadingMore }) 
             {customers?.map((c) => (
               <tr key={c.id} className="group hover:bg-white transition-all">
                 <td className="py-5 pl-10 border-b border-gray-50/50 font-black text-[#1A2B47]">{c.customer_name}</td>
-                <td className="py-5 text-center border-b border-gray-50/50 font-bold text-gray-300 italic">#{c.id}</td>
+                <td className="py-5 text-center border-b border-gray-50/50 font-bold text-black-300 Helvetica">#{c.id}</td>
                 <td className="py-5 text-center border-b border-gray-50/50">
-                  <span className="bg-gray-50 text-gray-500 px-3 py-1 rounded-lg font-black text-[11px]">{c.load}</span>
+                  <span className="bg-gray-50 text-gray-500 px-3 py-1 rounded-lg font-black text-[15px]">{c.load}</span>
                 </td>
                 <td className="py-5 pr-10 text-right border-b border-gray-50/50">
                 <span className={`inline-flex items-center gap-1.5 text-[15px] font-black uppercase px-4 py-1.5 rounded-full shadow-sm ${ c.status === 'Ready' ? 'bg-green-50 text-green-600 border border-green-100' : 'bg-blue-50 text-[#4475C4] border border-blue-100 animate-pulse' }`}> 

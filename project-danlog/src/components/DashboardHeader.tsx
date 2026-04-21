@@ -86,7 +86,7 @@ export const DashboardHeader = ({
         </div>
 
         {/* Dynamic Date Box - Day Name Only */}
-        <div className="bg-[#1A2B47] text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest shadow-md italic">
+        <div className="bg-[#1A2B47] text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest shadow-md bold">
           {formatDate()}
         </div>
       </div>

@@ -11,91 +11,86 @@ import { fetchRecordLogs, deleteOrder } from '../../services/laundryService';
 export default function RecordsPage() {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
-  
-  // State for Custom Delete Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
 
-  // Load data from Render backend on mount
   useEffect(() => {
-    const loadData = async () => {
-      const data = await fetchRecordLogs();
-      setRecords(data);
-      setLoading(false);
-    };
     loadData();
   }, []);
 
-  // Opens the custom modal and tracks which ID to delete
-  const openDeleteModal = (id) => {
-    setSelectedOrderId(id);
-    setIsModalOpen(true);
-  };
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      const response = await fetchRecordLogs();
+      
+      // DEBUG: CHECK YOUR BROWSER CONSOLE (F12)
+      console.log("RAW DATA FROM API:", response);
 
-  // Logic to call the API and update the UI list
-  const confirmDelete = async () => {
-    if (!selectedOrderId) return;
-    
-    const success = await deleteOrder(selectedOrderId);
-    if (success) {
-      // Instantly remove from the table
-      setRecords(prev => prev.filter(r => r.id !== selectedOrderId));
-      setIsModalOpen(false); 
-    } else {
-      alert("Backend Error: Could not delete from database.");
+      // Handle both { data: [] } and naked [ ] responses
+      const rawRecords = Array.isArray(response) ? response : response.data || [];
+      
+      // Filter out completed and set state
+      setRecords(rawRecords.filter(r => r.status !== "completed"));
+    } catch (err) {
+      console.error("Load error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const updateStatus = (id, newStatus) => {
-    setRecords(prev => prev.map(record => 
-      record.id === id ? { ...record, status: newStatus } : record
-    ));
+  const updateStatus = async (id, newStatus) => {
+    try {
+      const numericId = Number(id);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: numericId, status: newStatus }),
+      });
+
+      if (!response.ok) throw new Error("Failed update");
+
+      if (newStatus === "completed") {
+        setRecords(prev => prev.filter(r => r.id !== numericId));
+      } else {
+        setRecords(prev => prev.map(r => 
+          r.id === numericId ? { ...r, status: newStatus } : r
+        ));
+      }
+    } catch (err) {
+      alert("Error updating status.");
+    }
+  };
+
+  const openDeleteModal = (id) => { setSelectedOrderId(id); setIsModalOpen(true); };
+  const confirmDelete = async () => {
+    if (!selectedOrderId) return;
+    const success = await deleteOrder(selectedOrderId);
+    if (success) {
+      setRecords(prev => prev.filter(r => r.id !== selectedOrderId));
+      setIsModalOpen(false); 
+    }
   };
 
   return (
-    <main className="h-auto bg-[#F0F4FA] flex flex-col font-sans text-black relative">
-      <div className="p-12 custom-scrollbar space-y-8">
-        
-        {/* RESTORED: Dashboard Navigation Button */}
-        <div className="max-w-[1700px] mx-auto w-full flex justify-end">
-          <Link href="/">
-            <button className="bg-white border-2 border-[#4475C4] text-[#4475C4] px-8 py-3 rounded-2xl font-[1000] uppercase tracking-widest hover:bg-[#4475C4] hover:text-white transition-all shadow-lg active:scale-95">
-              ← Dashboard
-            </button>
-          </Link>
-        </div>
-
-        {loading ? (
-          <div className="flex items-center justify-center h-64">
-            <p className="text-center font-black animate-pulse uppercase tracking-[0.2em] text-[#4475C4]">
-              Synchronizing with Database...
-            </p>
-          </div>
-        ) : (
-          <>
-            <StatusTracker records={records} onUpdateStatus={updateStatus} />
-            <DailyLogTable records={records} onDelete={openDeleteModal} />
-          </>
-        )}
+    <main className="h-auto bg-[#F0F4FA] p-12 space-y-8 min-h-screen">
+      <div className="max-w-[1700px] mx-auto w-full flex justify-end">
+        <Link href="/">
+          <button className="bg-white border-2 border-[#4475C4] text-[#4475C4] px-8 py-3 rounded-2xl font-black uppercase tracking-widest hover:bg-[#4475C4] hover:text-white transition-all shadow-lg active:scale-95">
+            ← Dashboard
+          </button>
+        </Link>
       </div>
 
-      {/* CUSTOM DELETE MODAL */}
-      <DeleteModal 
-        isOpen={isModalOpen} 
-        orderId={selectedOrderId}
-        onClose={() => setIsModalOpen(false)}
-        onConfirm={confirmDelete}
-      />
+      {loading ? (
+        <div className="flex items-center justify-center h-64 font-black text-[#4475C4] animate-pulse">LOADING...</div>
+      ) : (
+        <>
+          <StatusTracker records={records} onUpdateStatus={updateStatus} />
+          <DailyLogTable records={records} onDelete={openDeleteModal} />
+        </>
+      )}
 
-      <style jsx>{`
-        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { 
-          background: #4475C4; 
-          border-radius: 10px; 
-          border: 2px solid #FFFFFF; 
-        }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-      `}</style>
+      <DeleteModal isOpen={isModalOpen} orderId={selectedOrderId} onClose={() => setIsModalOpen(false)} onConfirm={confirmDelete} />
     </main>
   );
 }
