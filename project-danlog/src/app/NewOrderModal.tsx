@@ -1,6 +1,23 @@
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
 
+interface NewOrderModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  mostRecentOrder?: any; // You can replace 'any' with a more specific type if you have one
+  onSubmit?: (data: any) => void; // Callback to parent on successful submission
+}
+
+export type Order = {
+  id: number;
+  customer_name: string;
+  total_weight: number;
+  load: number;
+  amount: number;
+  status: string;
+  created_at?: string;
+}
+
 export default function NewOrderModal({ isOpen, onClose, mostRecentOrder, onSubmit }: NewOrderModalProps) {
   const [customerName, setCustomerName] = useState('');
   const [weight, setWeight] = useState('');

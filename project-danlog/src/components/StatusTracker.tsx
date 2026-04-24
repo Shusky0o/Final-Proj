@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React from 'react';
 
-export const StatusTracker = ({ records, onUpdateStatus }) => {
-  const pending = records.filter(r => r.status === "pending");
-  const ready = records.filter(r => r.status === "ready");
+export const StatusTracker = ({ records, onUpdateStatus, pendingOrders, readyOrders }) => {
+  const pending = pendingOrders;
+  const ready = readyOrders;
 
   return (
     <div className="max-w-[1700px] mx-auto w-full grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -83,7 +83,7 @@ export const StatusTracker = ({ records, onUpdateStatus }) => {
       {/* TOTAL STATS (Doesn't need scroll) */}
       <div className="bg-white rounded-[2.5rem] shadow-xl p-10 flex flex-col items-center justify-center border border-gray-100 h-[600px]">
           <div className="w-32 h-32 bg-[#4475C4] rounded-full flex items-center justify-center text-white text-5xl font-black mb-6 shadow-2xl border-4 border-white">
-            {records.length}
+            {pendingOrders.length }
           </div>
           <p className="text-3xl font-black text-[#1A2B47] uppercase italic tracking-tighter">Total Active</p>
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.4em] mt-4">Laundromat Dashboard</p>

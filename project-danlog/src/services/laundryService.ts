@@ -4,7 +4,7 @@
  * Service to handle all Laundry/Order related API calls to the Render backend.
  */
 
-const getApiUrl = () => {
+export const getApiUrl = () => {
   const url = process.env.NEXT_PUBLIC_API_URL;
   if (!url) {
     console.error(" API URL is missing! Ensure .env has NEXT_PUBLIC_API_URL and you restarted the terminal.");
