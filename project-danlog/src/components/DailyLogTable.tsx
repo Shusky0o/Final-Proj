@@ -1,7 +1,24 @@
 // @ts-nocheck
 import React from 'react';
+import { useState } from 'react';
 
-export const DailyLogTable = ({ records, onDelete }) => (
+interface DailyLogTableProps {
+  records: any[]; 
+  onDelete: (id: number) => void;
+  onDateChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export function DailyLogTable({ records, onDelete, onDateChange }: DailyLogTableProps) {
+  function formattedTime(timestamp) {
+    return new Date(timestamp).toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
+  }
+
+
+  return(
   <div className="max-w-[1700px] mx-auto w-full pb-20">
     <div className="flex items-center justify-between mb-8">
       <div className="flex items-center gap-3">
@@ -10,7 +27,7 @@ export const DailyLogTable = ({ records, onDelete }) => (
       </div>
       <div className="flex items-center gap-4 bg-white/80 backdrop-blur-sm px-6 py-2 rounded-2xl shadow-xl border border-white">
         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">View History:</span>
-        <input type="date" className="bg-transparent text-[#4475C4] font-bold outline-none cursor-pointer text-lg" defaultValue="2026-03-15" />
+        <input type="date" className="bg-transparent text-[#4475C4] font-bold outline-none cursor-pointer text-lg" defaultValue={new Date().toISOString().split('T')[0]} onChange={onDateChange} />
       </div>
     </div>
 
@@ -23,18 +40,18 @@ export const DailyLogTable = ({ records, onDelete }) => (
             <th className="px-8 py-5 text-center">Total Loads</th>
             <th className="px-8 py-5 text-center">Time Logged</th>
             <th className="px-8 py-5 text-center">Final Status</th>
-            <th className="px-8 py-5 text-right pr-12">Actions</th> {/* Added Action Header */}
+            <th className="px-8 py-5 text-right pr-12">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
           {records.map((record) => (
             <tr key={record.id} className="hover:bg-white/50 transition-colors group">
-              <td className="px-8 py-6 font-black text-lg text-gray-800">{record.name}</td>
+              <td className="px-8 py-6 font-black text-lg text-gray-800">{record.name ? record.name : record.customer_name}</td>
               <td className="px-8 py-6 text-center font-bold text-gray-400 italic">{record.id}</td>
               <td className="px-8 py-6 text-center">
-                <span className="bg-[#4475C4]/10 text-[#4475C4] px-4 py-2 rounded-xl font-black text-sm">{record.loads}</span>
+                <span className="bg-[#4475C4]/10 text-[#4475C4] px-4 py-2 rounded-xl font-black text-sm">{record.loads ? record.loads: record.load}</span>
               </td>
-              <td className="px-8 py-6 text-center font-bold text-gray-500">{record.time}</td>
+              <td className="px-8 py-6 text-center font-bold text-gray-500">{record.time ? record.time : formattedTime(record.created_at)}</td>
               <td className="px-8 py-6 text-center">
                 <span className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-sm ${
                   record.status === 'Completed' ? 'bg-green-100 text-green-700' : 
@@ -63,4 +80,4 @@ export const DailyLogTable = ({ records, onDelete }) => (
       </table>
     </div>
   </div>
-);
+)};
