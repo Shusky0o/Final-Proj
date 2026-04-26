@@ -1,59 +1,109 @@
 // @ts-nocheck
 import React from 'react';
 
-export const StatusTracker = ({ records, onUpdateStatus }) => {
-  const pending = records.filter(r => r.status === "In Queue");
-  const ready = records.filter(r => r.status === "Ready");
+export const StatusTracker = ({ records, onUpdateStatus, pendingOrders, readyOrders }) => {
+  const pending = pendingOrders;
+  const ready = readyOrders;
 
   return (
     <div className="max-w-[1700px] mx-auto w-full grid grid-cols-1 md:grid-cols-3 gap-8">
+      
       {/* PENDING COLUMN */}
-      <div className="bg-white/70 backdrop-blur-md rounded-[2rem] shadow-xl overflow-hidden border border-white flex flex-col">
-        <div className="bg-[#B4C7E7] py-5 text-center">
-          <h2 className="text-xl font-black uppercase italic text-[#2D4B7A] tracking-wider">Pending</h2>
+      <div className="bg-white rounded-[2.5rem] shadow-xl overflow-hidden flex flex-col border border-gray-100 h-[600px]">
+        <div className="bg-[#B4C7E7] py-6 text-center shrink-0">
+          <h2 className="text-xl font-black uppercase italic text-[#2D4B7A] tracking-widest">Pending</h2>
         </div>
-        <div className="p-6 space-y-4">
+        
+        {/* SCROLLABLE AREA */}
+        <div className="p-6 space-y-4 overflow-y-auto custom-scrollbar flex-1 bg-gray-50/30">
           {pending.map((item) => (
-            <div key={item.id} className="flex justify-between items-center p-4 bg-white/50 rounded-2xl border border-gray-100 shadow-sm animate-in fade-in slide-in-from-left-4 duration-300">
+            <div key={item.id} className="flex justify-between items-center p-6 bg-white rounded-3xl border border-gray-100 shadow-sm transition-all hover:shadow-md">
               <div>
-                <p className="font-black text-lg">{item.name}</p>
-                <p className="text-[10px] font-bold text-gray-400 uppercase">{item.id} • {item.loads} Loads</p>
+                <p className="font-black text-xl text-[#1A2B47] leading-tight">
+                  {item.customer_name || item.name || "No Name Found"}
+                </p>
+                <p className="text-xs font-bold text-gray-400 mt-1 uppercase tracking-tighter">ID: {item.id}</p>
               </div>
-              <button onClick={() => onUpdateStatus(item.id, "Ready")} className="bg-[#4475C4] text-white text-[10px] font-black px-4 py-3 rounded-xl shadow-md uppercase active:scale-95 transition-all hover:bg-[#355ea3]">Set Ready</button>
+              <button 
+                onClick={() => onUpdateStatus(item.id, "ready")} 
+                className="bg-[#4475C4] text-white text-[10px] font-black px-6 py-3 rounded-xl shadow-lg uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shrink-0 ml-4"
+              >
+                Set Ready
+              </button>
             </div>
           ))}
-          {pending.length === 0 && <p className="text-center text-gray-300 font-bold italic py-10">No pending items</p>}
+          {pending.length === 0 && (
+            <div className="h-full flex items-center justify-center">
+               <p className="text-gray-300 font-bold italic">No pending loads</p>
+            </div>
+          )}
         </div>
       </div>
 
       {/* READY COLUMN */}
-      <div className="bg-white/70 backdrop-blur-md rounded-[2rem] shadow-xl overflow-hidden border border-white flex flex-col">
-        <div className="bg-[#A9D18E] py-5 text-center">
-          <h2 className="text-xl font-black uppercase italic text-[#385723] tracking-wider">Ready</h2>
+      <div className="bg-white rounded-[2.5rem] shadow-xl overflow-hidden flex flex-col border border-gray-100 h-[600px]">
+        <div className="bg-[#A9D18E] py-6 text-center shrink-0">
+          <h2 className="text-xl font-black uppercase italic text-[#385723] tracking-widest">Ready</h2>
         </div>
-        <div className="p-6 space-y-4">
+        
+        {/* SCROLLABLE AREA */}
+        <div className="p-6 space-y-4 overflow-y-auto custom-scrollbar flex-1 bg-gray-50/30">
           {ready.map((item) => (
-            <div key={item.id} className="flex justify-between items-center p-4 bg-white/50 rounded-2xl border border-gray-100 shadow-sm animate-in fade-in slide-in-from-right-4 duration-300">
+            <div key={item.id} className="flex justify-between items-center p-6 bg-white rounded-3xl border border-gray-100 shadow-sm transition-all hover:shadow-md">
               <div>
-                <p className="font-black text-lg">{item.name}</p>
-                <p className="text-[10px] font-bold text-gray-400 uppercase">{item.id} • {item.loads} Loads</p>
+                <p className="font-black text-xl text-[#1A2B47] leading-tight">
+                  {item.customer_name || item.name || "No Name Found"}
+                </p>
+                <p className="text-xs font-bold text-gray-400 mt-1 uppercase tracking-tighter">ID: {item.id}</p>
               </div>
-              <div className="flex gap-2">
-                <button onClick={() => onUpdateStatus(item.id, "In Queue")} className="bg-white text-black text-[9px] font-black px-3 py-2 rounded-lg border border-gray-200 uppercase active:scale-90 transition-all hover:bg-red-50 hover:text-red-500">back</button>
-                <button onClick={() => onUpdateStatus(item.id, "Completed")} className="bg-[#6CCF9B] text-white text-[9px] font-black px-3 py-2 rounded-lg shadow-md uppercase active:scale-90 transition-all hover:bg-[#5bb88a]">complete</button>
+              <div className="flex gap-2 shrink-0 ml-4">
+                <button 
+                  onClick={() => onUpdateStatus(item.id, "pending")} 
+                  className="bg-gray-100 text-gray-400 text-[9px] font-black px-4 py-2.5 rounded-lg uppercase hover:bg-red-50 hover:text-red-500 transition-all"
+                >
+                  back
+                </button>
+                <button 
+                  onClick={() => onUpdateStatus(item.id, "completed")} 
+                  className="bg-[#6CCF9B] text-white text-[9px] font-black px-4 py-2.5 rounded-lg shadow-md uppercase hover:bg-[#5bb88a] transition-all"
+                >
+                  complete
+                </button>
               </div>
             </div>
           ))}
-          {ready.length === 0 && <p className="text-center text-gray-300 font-bold italic py-10">No items ready</p>}
+          {ready.length === 0 && (
+            <div className="h-full flex items-center justify-center">
+               <p className="text-gray-300 font-bold italic">No loads ready</p>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* TOTAL STATS */}
-      <div className="bg-white/70 backdrop-blur-md rounded-[2rem] shadow-xl p-8 flex flex-col items-center justify-center border border-white">
-          <div className="w-20 h-20 bg-[#4475C4] rounded-full flex items-center justify-center text-white text-3xl font-black mb-4 shadow-lg shadow-[#4475C4]/30">{records.length}</div>
-          <p className="text-3xl font-black tracking-tighter text-[#4475C4]">TOTAL ORDERS</p>
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-2 italic">Daily Performance</p>
+      {/* TOTAL STATS (Doesn't need scroll) */}
+      <div className="bg-white rounded-[2.5rem] shadow-xl p-10 flex flex-col items-center justify-center border border-gray-100 h-[600px]">
+          <div className="w-32 h-32 bg-[#4475C4] rounded-full flex items-center justify-center text-white text-5xl font-black mb-6 shadow-2xl border-4 border-white">
+            {pendingOrders.length }
+          </div>
+          <p className="text-3xl font-black text-[#1A2B47] uppercase italic tracking-tighter">Total Active</p>
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.4em] mt-4">Laundromat Dashboard</p>
       </div>
+
+      <style jsx>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #E2E8F0;
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #CBD5E1;
+        }
+      `}</style>
     </div>
   );
 };

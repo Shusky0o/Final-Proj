@@ -1,7 +1,24 @@
 // @ts-nocheck
 import React from 'react';
+import { useState } from 'react';
 
-export const DailyLogTable = ({ records }) => (
+interface DailyLogTableProps {
+  records: any[]; 
+  onDelete: (id: number) => void;
+  onDateChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export function DailyLogTable({ records, onDelete, onDateChange }: DailyLogTableProps) {
+  function formattedTime(timestamp) {
+    return new Date(timestamp).toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
+  }
+
+
+  return(
   <div className="max-w-[1700px] mx-auto w-full pb-20">
     <div className="flex items-center justify-between mb-8">
       <div className="flex items-center gap-3">
@@ -10,7 +27,7 @@ export const DailyLogTable = ({ records }) => (
       </div>
       <div className="flex items-center gap-4 bg-white/80 backdrop-blur-sm px-6 py-2 rounded-2xl shadow-xl border border-white">
         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">View History:</span>
-        <input type="date" className="bg-transparent text-[#4475C4] font-bold outline-none cursor-pointer text-lg" defaultValue="2026-03-15" />
+        <input type="date" className="bg-transparent text-[#4475C4] font-bold outline-none cursor-pointer text-lg" defaultValue={new Date().toISOString().split('T')[0]} onChange={onDateChange} />
       </div>
     </div>
 
@@ -22,31 +39,53 @@ export const DailyLogTable = ({ records }) => (
             <th className="px-8 py-5 text-center">Order ID</th>
             <th className="px-8 py-5 text-center">Total Loads</th>
             <th className="px-8 py-5 text-center">Time Logged</th>
-            <th className="px-8 py-5 text-right">Final Status</th>
+            <th className="px-8 py-5 text-center">Final Status</th>
+            <th className="px-8 py-5 text-right pr-12">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
-          {records.map((record) => (
-            <tr key={record.id} className="hover:bg-white/50 transition-colors group">
-              <td className="px-8 py-6 font-black text-lg text-gray-800">{record.name}</td>
-              <td className="px-8 py-6 text-center font-bold text-gray-400 italic">{record.id}</td>
-              <td className="px-8 py-6 text-center">
-                <span className="bg-[#4475C4]/10 text-[#4475C4] px-4 py-2 rounded-xl font-black text-sm">{record.loads}</span>
-              </td>
-              <td className="px-8 py-6 text-center font-bold text-gray-500">{record.time}</td>
-              <td className="px-8 py-6 text-right">
-                <span className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-sm ${
-                  record.status === 'Completed' ? 'bg-green-100 text-green-700' : 
-                  record.status === 'Ready' ? 'bg-green-50 text-green-500 border border-green-100' :
-                  'bg-blue-100 text-[#4475C4]'
-                }`}>
-                  {record.status}
-                </span>
+          {records.length === 0 ? (
+            <tr>
+              <td colSpan={6} className="px-8 py-12 text-center">
+                <span className="text-lg font-black text-gray-400 tracking-wide">No customers logged on this day</span>
               </td>
             </tr>
-          ))}
+          ) : (
+            records.map((record) => (
+              <tr key={record.id} className="hover:bg-white/50 transition-colors group">
+                <td className="px-8 py-6 font-black text-lg text-gray-800">{record.name || record.customer_name}</td>
+                <td className="px-8 py-6 text-center font-bold text-gray-400 italic">{record.id}</td>
+                <td className="px-8 py-6 text-center">
+                  <span className="bg-[#4475C4]/10 text-[#4475C4] px-4 py-2 rounded-xl font-black text-sm">{record.loads || record.load}</span>
+                </td>
+                <td className="px-8 py-6 text-center font-bold text-gray-500">{record.time || formattedTime(record.created_at)}</td>
+                <td className="px-8 py-6 text-center">
+                  <span className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-sm ${
+                    record.status === 'Completed' ? 'bg-green-100 text-green-700' : 
+                    record.status === 'Ready' ? 'bg-green-50 text-green-500 border border-green-100' :
+                    'bg-blue-100 text-[#4475C4]'
+                  }`}>
+                    {record.status}
+                  </span>
+                </td>
+                
+                {/* TRASHCAN BUTTON SECTION */}
+                <td className="px-8 py-6 text-right pr-12">
+                  <button 
+                    onClick={() => onDelete(record.id)}
+                    className="p-3 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-all active:scale-90"
+                    title="Delete Order"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2M10 11v6M14 11v6"/>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
   </div>
-);
+)};

@@ -1,15 +1,72 @@
 // @ts-nocheck
 import React from 'react';
+import { useEffect, useState } from 'react';
+import { getMonthNumber } from '../lib/dateFormatter';
 
 export const MonthlyTimelineModal = ({ 
   activeMonth, 
   selectedYear, 
   onClose, 
   getDaysInMonth, 
-  revenueData, 
-  disbursementItems 
+  revenueData
 }) => {
+  const [disbursementItems, setDisbursementItems] = useState([]);
+  const [apiData, setApiData] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!activeMonth) return;
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/disbursement/month?month=${getMonthNumber(activeMonth)}&year=${selectedYear}`);
+        const res2 = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/daily-orders?month=${getMonthNumber(activeMonth)}&year=${selectedYear}`);
+
+        const data = await res.json();
+        const data2 = await res2.json();
+
+        const formatted = formatDisbursements(data);
+
+        setApiData(data2);
+        setDisbursementItems(formatted);
+      }
+      catch (error) {
+        console.error("Error fetching disbursement data:", error);
+      }
+    };
+
+    fetchData();
+  }, [activeMonth]);
   if (!activeMonth) return null;
+
+  const formatDisbursements = (data: any[]) => {
+    return data.map(item => {
+      const dateObj = new Date(item.transaction_date);
+
+      const formattedDate = dateObj.toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      });
+
+      return {
+        date: formattedDate,
+        description: item.name,
+        amount: item.amount,
+      };
+    });
+  };
+
+  const daysInMonth = getDaysInMonth(activeMonth);
+
+  const dailyTotalsMap = {};
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    dailyTotalsMap[d] = 0;
+  }
+
+  apiData?.data?.forEach((item) => {
+    const day = new Date(item.day).getDate();
+    dailyTotalsMap[day] = Number(item.total);
+  });
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-8">
@@ -31,7 +88,7 @@ export const MonthlyTimelineModal = ({
         <div className="flex-1 overflow-y-auto p-10 custom-scrollbar space-y-4">
           {[...Array(getDaysInMonth(activeMonth))].map((_, i) => {
             const day = i + 1;
-            const dailyRev = revenueData[selectedYear]?.[activeMonth]?.daily || 0;
+            const dailyRev = dailyTotalsMap[day];
             const dateStr = `${activeMonth} ${day}, ${selectedYear}`;
             const dailyExpenses = disbursementItems.filter(item => item.date === dateStr);
             const totalExp = dailyExpenses.reduce((s, item) => s + item.amount, 0);

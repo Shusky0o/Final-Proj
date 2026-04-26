@@ -1,7 +1,39 @@
 // @ts-nocheck
 import React from 'react';
 
-export const FinancialSummary = ({ revenue, disbursement, onLogExpense }) => (
+export const FinancialSummary = ({ revenue, disbursement, onLogExpense, isLoading }) => {
+
+  if (isLoading) {
+    return (
+      <div className="max-w-[1700px] mx-auto w-full grid grid-cols-1 lg:grid-cols-3 gap-8 animate-pulse">
+        
+        {/* Card 1 */}
+        <div className="bg-white/70 backdrop-blur-xl rounded-[2.5rem] p-8 shadow-2xl border border-white">
+          <div className="w-14 h-14 bg-gray-200 rounded-2xl mb-6"></div>
+          <div className="h-3 w-32 bg-gray-200 rounded mb-3"></div>
+          <div className="h-10 w-40 bg-gray-200 rounded"></div>
+        </div>
+
+        {/* Card 2 */}
+        <div className="bg-white/70 backdrop-blur-xl rounded-[2.5rem] p-8 shadow-2xl border border-white">
+          <div className="w-14 h-14 bg-gray-200 rounded-2xl mb-6"></div>
+          <div className="h-3 w-32 bg-gray-200 rounded mb-3"></div>
+          <div className="h-10 w-40 bg-gray-200 rounded mb-6"></div>
+          <div className="h-10 w-full bg-gray-200 rounded-2xl"></div>
+        </div>
+
+        {/* Card 3 */}
+        <div className="bg-white/70 backdrop-blur-xl rounded-[2.5rem] p-8 shadow-2xl border border-white">
+          <div className="w-14 h-14 bg-gray-200 rounded-2xl mb-6"></div>
+          <div className="h-3 w-32 bg-gray-200 rounded mb-3"></div>
+          <div className="h-10 w-40 bg-gray-200 rounded"></div>
+        </div>
+
+      </div>
+    );
+  }
+  
+  return (
   <div className="max-w-[1700px] mx-auto w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
     <div className="bg-white/70 backdrop-blur-xl rounded-[2.5rem] p-8 shadow-2xl border border-white group hover:scale-[1.02] transition-transform">
       <div className="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-green-500 transition-colors duration-500">
@@ -29,4 +61,4 @@ export const FinancialSummary = ({ revenue, disbursement, onLogExpense }) => (
       <p className="mt-8 text-[9px] font-bold text-blue-400 uppercase italic tracking-widest">Calculated Performance</p>
     </div>
   </div>
-);
+);}
