@@ -27,7 +27,7 @@ export const StatsPulse = () => (
     </div>
 
     <div className="bg-white rounded-[3rem] p-6 md:p-8 shadow-xl shadow-gray-200/50 border border-white transition-all hover:scale-[1.02]">
-      <p className="text-gray-400 font-black text-[10px] tracking-[0.2em] uppercase mb-2">Monthly Average</p>
+      <p className="text-gray-400 font-black text-[10px] tracking-[0.2em] uppercase mb-2">Monthly Revenue</p>
       <div className="flex items-center gap-2">
         <span className="text-3xl md:text-4xl font-black text-[#1A2B47]">₱29,120</span>
         <div className="w-2 h-2 bg-[#4475C4] rounded-full opacity-20"></div>

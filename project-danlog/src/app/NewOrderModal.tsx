@@ -137,7 +137,6 @@ export default function NewOrderModal({ isOpen, onClose, mostRecentOrder, onSubm
             <div className="relative bg-white border-2 border-[#4475C4] rounded-3xl p-6 flex items-center justify-between shadow-sm">
               <div className="flex flex-col">
                 <p className="text-[11px] font-black text-[#4475C4] uppercase tracking-wider">Philippine Peso</p>
-                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">Automatic Calculation</p>
               </div>
               
               <div className="flex items-center gap-2">
