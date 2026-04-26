@@ -13,6 +13,7 @@ import { Order } from '../NewOrderModal';
 
 export default function RecordsPage() {
   const [records, setRecords] = useState([]);
+  const [dailyLogRecords, setDailyLogRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
@@ -50,26 +51,11 @@ export default function RecordsPage() {
 
   const loadData = async () => {
     setLoading(true);
-    // try {
-    //   const response = await fetchRecordLogs();
-      
-    //   // DEBUG: CHECK YOUR BROWSER CONSOLE (F12)
-    //   console.log("RAW DATA FROM API:", response);
-
-    //   // Handle both { data: [] } and naked [ ] responses
-    //   const rawRecords = Array.isArray(response) ? response : response.data || [];
-      
-    //   // Filter out completed and set state
-    //   setRecords(rawRecords.filter(r => r.status !== "completed"));
-    // } catch (err) {
-    //   console.error("Load error:", err);
-    // } finally {
-    //   setLoading(false);
-    // }
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/by-date?date=${new Date().toISOString().split('T')[0]}`);
+      const currentDate = new Date().toISOString().split('T')[0];
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/by-date?date=${currentDate}`);
       const data = await res.json();
-      setOrders([...orders, ...data.data]);
+      setDailyLogRecords(data.data || []);
     } catch (error) {
       console.error('Error fetching dated records:', error);
     } finally {
@@ -131,17 +117,8 @@ export default function RecordsPage() {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/by-date?date=${selectedDate}`);
       const data = await res.json();
-      const newItems = data.data || [];
-
-      setOrders(prev => {
-        // 1. Create a Map of existing orders by ID
-        const existingIds = new Set(prev.map(o => o.id));
-        
-        // 2. Only add items that aren't already in the list
-        const uniqueNewItems = newItems.filter(item => !existingIds.has(item.id));
-        
-        return [...prev, ...uniqueNewItems];
-      });
+      // Replace the table content entirely with the new date's data
+      setDailyLogRecords(data.data || []);
     } catch (error) {
       console.error('Error fetching dated records:', error);
     }
@@ -162,7 +139,7 @@ export default function RecordsPage() {
       ) : (
         <>
           <StatusTracker records={orders} onUpdateStatus={updateStatus} pendingOrders={pendingOrders} readyOrders={readyOrders} />
-          <DailyLogTable records={orders} onDelete={openDeleteModal} onDateChange={handleDateChange}/>
+          <DailyLogTable records={dailyLogRecords} onDelete={openDeleteModal} onDateChange={handleDateChange}/>
         </>
       )}
 
