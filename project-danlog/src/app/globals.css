@@ -1,13 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-  /* This ensures your custom fonts and colors are mapped */
+  /* Fonts */
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular;
-  
 
+  /* Brand Colors */
   --color-brand-blue: #4475C4;
   --color-brand-dark: #1A2B47;
+
+  /* Status Colors for v4 */
+  --color-status-ready-bg: #f0fdf4;
+  --color-status-ready-text: #16a34a;
+  --color-status-ready-border: #22c55e;
+
+  --color-status-pending-bg: #eff6ff;
+  --color-status-pending-text: #4475C4;
+  --color-status-pending-border: #4475C4;
+
+  --color-status-completed-bg: #f8fafc;
+  --color-status-completed-text: #94a3b8;
+  --color-status-completed-border: #e2e8f0;
 }
 
 :root {
@@ -16,8 +29,29 @@
 }
 
 body {
-  background: #F0F4FA; /* Set this to your app's light blue/gray background */
+  background: #F0F4FA; 
   color: var(--foreground);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Status Utilities */
+@layer utilities {
+  .badge-ready {
+    background-color: var(--color-status-ready-bg);
+    color: var(--color-status-ready-text);
+    border: 2px solid var(--color-status-ready-border);
+  }
+
+  .badge-pending {
+    background-color: var(--color-status-pending-bg);
+    color: var(--color-status-pending-text);
+    border: 2px solid var(--color-status-pending-border);
+  }
+
+  .badge-completed {
+    background-color: var(--color-status-completed-bg);
+    color: var(--color-status-completed-text);
+    border: 1px solid var(--color-status-completed-border);
+  }
 }
