@@ -13,7 +13,6 @@ import { Order } from '../NewOrderModal';
 
 export default function RecordsPage() {
   const [records, setRecords] = useState([]);
-  const [dailyLogRecords, setDailyLogRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
@@ -24,42 +23,55 @@ export default function RecordsPage() {
 
   useEffect(() => {
     const fetchAllOrders = async () => {
-      const getOrderbyStatus = async (status: string) => {
-        try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/status-summary?status=${status}`);
+      try {
+        const getOrderbyStatus = async (status: string) => {
+          // Use a fallback if the env variable is missing
+          const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+          const response = await fetch(`${baseUrl}/orders/status-summary?status=${status}`);
           const data = await response.json();
-          // Add the status to each order object so we can filter them later
-          return data.data.map((order: any) => ({ ...order, status }));
-        } catch (error) {
-          console.error(`Error fetching ${status} orders:`, error);
-          return [];
-        }
-      };
+          return data.data ? data.data.map((order: any) => ({ ...order, status })) : [];
+        };
 
-      // Fetch both in parallel
-      const [pending, ready] = await Promise.all([
-        getOrderbyStatus("pending"),
-        getOrderbyStatus("ready")
-      ]);
+        const [pending, ready] = await Promise.all([
+          getOrderbyStatus("pending"),
+          getOrderbyStatus("ready")
+        ]);
 
-      setOrders([...pending, ...ready]);
+        setOrders(prev => {
+          const existingIds = new Set(prev.map(o => o.id));
+          const combined = [...pending, ...ready];
+          return [...prev, ...combined.filter(o => !existingIds.has(o.id))];
+        });
+      } catch (err) {
+        console.error("Critical failure in fetchAllOrders:", err);
+      }
     };
 
-    fetchAllOrders();
-    loadData();
+    // Run both, but ensure we don't stay in a permanent loading state
+    Promise.all([fetchAllOrders(), loadData()]).finally(() => {
+      setLoading(false);
+    });
   }, []);
 
   const loadData = async () => {
     setLoading(true);
     try {
-      const currentDate = new Date().toISOString().split('T')[0];
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/by-date?date=${currentDate}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/by-date?date=${new Date().toISOString().split('T')[0]}`);
       const data = await res.json();
-      setDailyLogRecords(data.data || []);
+      
+      // Safety check for data.data
+      const newItems = data?.data || [];
+      
+      setOrders(prev => {
+        const existingIds = new Set(prev.map(o => o.id));
+        const uniqueNewItems = newItems.filter(item => !existingIds.has(item.id));
+        return [...prev, ...uniqueNewItems];
+      });
     } catch (error) {
       console.error('Error fetching dated records:', error);
     } finally {
-      setLoading(false);
+      // Force loading to false regardless of success/fail
+      setLoading(false); 
     }
   };
 
@@ -117,8 +129,17 @@ export default function RecordsPage() {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/by-date?date=${selectedDate}`);
       const data = await res.json();
-      // Replace the table content entirely with the new date's data
-      setDailyLogRecords(data.data || []);
+      const newItems = data.data || [];
+
+      setOrders(prev => {
+        // 1. Create a Map of existing orders by ID
+        const existingIds = new Set(prev.map(o => o.id));
+        
+        // 2. Only add items that aren't already in the list
+        const uniqueNewItems = newItems.filter(item => !existingIds.has(item.id));
+        
+        return [...prev, ...uniqueNewItems];
+      });
     } catch (error) {
       console.error('Error fetching dated records:', error);
     }
@@ -139,7 +160,7 @@ export default function RecordsPage() {
       ) : (
         <>
           <StatusTracker records={orders} onUpdateStatus={updateStatus} pendingOrders={pendingOrders} readyOrders={readyOrders} />
-          <DailyLogTable records={dailyLogRecords} onDelete={openDeleteModal} onDateChange={handleDateChange}/>
+          <DailyLogTable records={orders} onDelete={openDeleteModal} onDateChange={handleDateChange}/>
         </>
       )}
 

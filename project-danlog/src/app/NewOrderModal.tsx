@@ -143,6 +143,7 @@ export default function NewOrderModal({ isOpen, onClose, mostRecentOrder, onSubm
                 <button 
                   type="button"
                   onClick={() => setLoads(loads + 1)}
+                  data-testid="increment-loads"
                   className="px-5 py-5 text-[#4475C4] hover:bg-gray-100 transition-colors font-black text-xl"
                 >+</button>
               </div>
