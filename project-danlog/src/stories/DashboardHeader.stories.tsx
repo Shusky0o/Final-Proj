@@ -71,11 +71,11 @@ export const InteractiveHeader: StoryObj = {
 };
 
 export const FinancialPageHeader: StoryObj = {
-  render: () => <HeaderParent initialTitle="Financial Analytics" />,
+  render: () => <HeaderParent initialTitle="Financial Analysis" />,
 };
 
 export const OrdersPageHeader: StoryObj = {
-  render: () => <HeaderParent initialTitle="Order Registry" />,
+  render: () => <HeaderParent initialTitle="Record Log" />,
 };
 
 /**
