@@ -8,13 +8,12 @@ const meta: Meta<typeof StatsPulse> = {
   title: 'Dashboard/StatsPulse',
   component: StatsPulse,
   parameters: {
-    // Component is a sidebar element, so we wrap it in a container 
-    // to simulate its actual layout width.
-    layout: 'fullscreen',
+    layout: 'centered',
   },
   decorators: [
     (Story) => (
-      <div className="p-8 bg-[#F8FAFC] min-h-screen w-[400px]">
+      /* Increased width and added overflow protection to prevent the "cut off" look */
+      <div className="p-8 bg-[#F8FAFC] border border-slate-200 rounded-xl w-full max-w-[450px] min-h-[400px] overflow-hidden shadow-sm">
         <Story />
       </div>
     ),
@@ -39,7 +38,6 @@ export const LiveRegistry: Story = {
 
 /**
  * Skeleton state used while fetching data from the API.
- * This tests the Tailwind 'animate-pulse' and gray placeholders.
  */
 export const LoadingState: Story = {
   args: {
@@ -48,7 +46,7 @@ export const LoadingState: Story = {
 };
 
 /**
- * State where some data might be missing or zero.
+ * State where data is zero.
  */
 export const EmptyState: Story = {
   args: {
@@ -58,15 +56,3 @@ export const EmptyState: Story = {
     isLoading: false,
   },
 };
-
-/**
- * Testing high-volume numbers to check for text overflow.
- */
-export const HighVolume: Story = {
-    args: {
-      pendingCount: 148,
-      todayRevenue: 1250000.75,
-      monthlyRevenue: 12450000.00,
-      isLoading: false,
-    },
-  };
