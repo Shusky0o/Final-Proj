@@ -5,28 +5,99 @@ export const ExpenseModal = ({ isOpen, onClose, form, setForm, onSave }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-[#1A2B47]/60 backdrop-blur-md z-[300] flex items-center justify-center p-4">
-      <div className="bg-white rounded-[3.5rem] p-12 max-w-lg w-full shadow-2xl animate-in zoom-in-95 duration-200 border border-white">
-        <h2 className="text-4xl font-[1000] text-[#1A2B47] mb-2 uppercase tracking-tighter">Log <span className="text-black-500">Expense</span></h2>
-        <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-8">Disbursement Records</p>
+    <div className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+      {/* Backdrop matching NewOrderModal */}
+      <div 
+        className="absolute inset-0 bg-[#1A2B47]/40 backdrop-blur-xl transition-opacity animate-in fade-in duration-500"
+        onClick={onClose}
+      ></div>
+      
+      <div className="relative bg-white rounded-[2.5rem] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.2)] w-full max-w-xl overflow-hidden border border-gray-100 transform transition-all animate-in zoom-in-95 duration-300">
         
-        <form onSubmit={onSave} className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase text-[#4475C4] ml-2 tracking-widest">Item Description</label>
-              <input required type="text" placeholder="e.g. 4 boxes of Detergent" value={form.description} onChange={(e) => setForm({...form, description: e.target.value})} className="w-full p-5 bg-gray-50 rounded-2xl border border-gray-100 outline-none font-black focus:bg-white focus:ring-4 ring-blue-500/10 transition-all" />
+        {/* Header Section */}
+        <div className="bg-white px-10 pt-10 pb-6 border-b border-gray-50 flex justify-between items-start">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-6 bg-red-500 rounded-full"></div>
+              <h2 className="text-2xl font-black uppercase tracking-[0.15em] text-[#1A2B47]">Log Expense</h2>
             </div>
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase text-[#4475C4] ml-2 tracking-widest">Amount (₱)</label>
-              <input required type="number" placeholder="0.00" value={form.amount} onChange={(e) => setForm({...form, amount: e.target.value})} className="w-full p-5 bg-gray-50 rounded-2xl border border-gray-100 outline-none font-black focus:bg-white focus:ring-4 ring-blue-500/10 transition-all text-2xl text-red-500" />
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] ml-3">System Registry</p>
+          </div>
+          
+          <div className="flex flex-col items-end">
+            <span className="text-[9px] font-black uppercase text-red-500 tracking-widest opacity-60 mb-1">Status</span>
+            <div className="bg-red-50 px-4 py-1.5 rounded-xl border border-red-100">
+              <span className="text-[10px] font-black text-red-600 uppercase tracking-widest">Disbursement</span>
             </div>
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase text-[#4475C4] ml-2 tracking-widest">Transaction Date</label>
-              <input required type="text" placeholder="April 15, 2026" value={form.date} onChange={(e) => setForm({...form, date: e.target.value})} className="w-full p-5 bg-gray-50 rounded-2xl border border-gray-100 outline-none font-black focus:bg-white focus:ring-4 ring-blue-500/10 transition-all" />
+          </div>
+        </div>
+
+        <form onSubmit={onSave} className="p-10 space-y-7">
+          
+          {/* Item Description */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Item Description</label>
+            <input 
+              required 
+              type="text" 
+              placeholder="e.g. 4 boxes of Detergent" 
+              value={form.name} 
+              onChange={(e) => setForm({...form, name: e.target.value})} 
+              autoFocus
+              className="w-full bg-gray-50/50 border-2 border-transparent p-5 rounded-2xl focus:outline-none focus:border-red-500/20 focus:bg-white transition-all text-xl font-bold text-[#1A2B47] placeholder:text-gray-200" 
+            />
+          </div>
+
+          {/* Transaction Date */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Transaction Date</label>
+            <input 
+              required 
+              type="date" 
+              value={form.transaction_date} 
+              onChange={(e) => setForm({...form, transaction_date: e.target.value})} 
+              className="w-full bg-gray-50/50 border-2 border-transparent p-5 rounded-2xl focus:outline-none focus:border-red-500/20 focus:bg-white transition-all font-bold text-[#1A2B47]" 
+            />
+          </div>
+
+          {/* Amount Box - Matching the Blue Billable box style but in Red */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Total Expense Amount</label>
+            <div className="relative bg-white border-2 border-red-500 rounded-3xl p-6 flex items-center justify-between shadow-sm">
+              <div className="flex flex-col">
+                <p className="text-[11px] font-black text-red-500 uppercase tracking-wider">Philippine Peso</p>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <span className="text-2xl font-black text-red-500">₱</span>
+                <input 
+                  required
+                  type="number"
+                  placeholder="0.00" 
+                  value={form.amount}
+                  onChange={(e) => setForm({...form, amount: parseFloat(e.target.value) || 0})}
+                  className="bg-transparent text-4xl font-black outline-none w-32 text-right text-[#1A2B47] placeholder:text-gray-100 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+                />
+              </div>
             </div>
-            <div className="flex gap-4 pt-6">
-              <button type="button" onClick={onClose} className="flex-1 py-5 font-black uppercase text-xs text-gray-400 hover:text-red-500 transition-colors">Cancel</button>
-              <button type="submit" className="flex-[2] bg-[#1A2B47] text-white px-8 py-5 rounded-[1.5rem] font-black uppercase text-xs shadow-xl hover:bg-[#4475C4] active:scale-95 transition-all tracking-widest">Save Record</button>
-            </div>
+          </div>
+
+          {/* Footer Actions */}
+          <div className="flex items-center justify-between pt-2">
+            <button 
+              type="button" 
+              onClick={onClose} 
+              className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-red-500 transition-all"
+            >
+              Discard Entry
+            </button>
+            <button 
+              type="submit" 
+              className="bg-slate-900 text-white px-12 py-5 rounded-2xl font-black uppercase text-[11px] tracking-[0.2em] shadow-lg shadow-slate-900/30 hover:bg-red-600 hover:scale-[1.02] active:scale-95 transition-all"
+            >
+              Save Record
+            </button>
+          </div>
         </form>
       </div>
     </div>
