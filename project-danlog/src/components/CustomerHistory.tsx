@@ -41,8 +41,8 @@ export function CustomerHistory({ customers, fetchMore, hasMore, loadingMore }) 
 
       {/* CONTAINER */}
       <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-slate-200 shadow-xl flex flex-col flex-1 overflow-hidden">
-        <div ref={scrollRef} className="overflow-y-auto flex-1">
-          <table className="w-full text-left border-separate border-spacing-0">
+        <div ref={scrollRef} className="overflow-y-auto overflow-x-hidden flex-1">
+          <table className="w-full table-fixed text-left border-separate border-spacing-0">
             <thead className="sticky top-0 bg-slate-50 border-b border-slate-200 z-20">
               <tr className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
                 <th className="py-4 pl-8 border-b border-slate-200">Customer Name</th>

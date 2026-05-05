@@ -12,6 +12,8 @@ export const MonthlyTimelineModal = ({
 }) => {
   const [disbursementItems, setDisbursementItems] = useState([]);
   const [apiData, setApiData] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedExpenseId, setSelectedExpenseId] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -124,11 +126,24 @@ export const MonthlyTimelineModal = ({
                     <p className="text-[12px] font-black text-[#1A2B47] uppercase mb-3 tracking-widest">Disbursements</p>
                     <div className="flex flex-wrap gap-2">
                       {dailyExpenses.length > 0 ? dailyExpenses.map((exp, idx) => (
-                        <div key={idx} className="bg-red-50 px-4 py-2 rounded-xl border border-red-100 flex flex-col">
-                          <span className="text-[14px] font-black text-red-600 tracking-tighter">₱{exp.amount.toLocaleString()}</span>
-                          <span className="text-[10px] font-bold text-[#1A2B47] uppercase italic opacity-70">{exp.description}</span>
+                        <div key={idx} className="bg-red-50 px-4 py-2 rounded-xl border border-red-100 flex items-center gap-3 group hover:bg-red-100 transition-colors">
+                          <div className="flex flex-col">
+                            <span className="text-[14px] font-black text-red-600 tracking-tighter">₱{exp.amount.toLocaleString()}</span>
+                            <span className="text-[10px] font-black text-[#1A2B47] uppercase tracking-widest">{exp.description}</span>
+                          </div>
+                          <button 
+                            onClick={() => {
+                              setSelectedExpenseId(exp.description);
+                              setShowModal(true);
+                            }}
+                            className="p-1 text-slate-300 hover:text-red-500 transition-colors shrink-0"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2M10 11v6M14 11v6"/>
+                            </svg>
+                          </button>
                         </div>
-                      )) : <span className="text-[12px] font-black text-[#4475C4] uppercase tracking-widest italic bg-blue-50 px-4 py-2 rounded-xl border border-blue-100">No Outbound Record</span>}
+                      )) : <span className="text-[12px] font-black text-[#4475C4] uppercase tracking-widest bg-blue-50 px-4 py-2 rounded-xl border border-blue-100">No Outbound Record</span>}
                     </div>
                   </div>
 
@@ -145,6 +160,47 @@ export const MonthlyTimelineModal = ({
           })}
         </div>
       </div>
+
+      {/* STATIC DELETE MODAL */}
+      {showModal && (
+        <div className="fixed inset-0 z-[300] flex items-center justify-center p-6">
+          <div 
+            className="absolute inset-0 bg-[#1A2B47]/40 backdrop-blur-md"
+            onClick={() => setShowModal(false)}
+          />
+          <div className="relative bg-white rounded-[2.5rem] shadow-2xl border border-white w-full max-w-md overflow-hidden transform transition-all scale-100 animate-in fade-in zoom-in duration-200">
+            <div className="p-10 text-center">
+              <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2M10 11v6M14 11v6"/>
+                </svg>
+              </div>
+              
+              <h3 className="text-2xl font-black text-[#1A2B47] mb-2 uppercase tracking-tight">
+                Delete Disbursement
+              </h3>
+              <p className="text-gray-500 font-black mb-8 uppercase tracking-widest">
+                Are you sure you want to delete <span className="text-[#4475C4]">{selectedExpenseId}</span>? This action cannot be undone.
+              </p>
+
+              <div className="flex gap-4">
+                <button 
+                  onClick={() => setShowModal(false)}
+                  className="flex-1 px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-gray-400 hover:bg-gray-50 transition-all active:scale-95"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={() => setShowModal(false)}
+                  className="flex-1 px-6 py-4 rounded-2xl font-black uppercase tracking-widest bg-red-500 text-white shadow-lg shadow-red-200 hover:bg-red-600 transition-all active:scale-95"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style jsx>{`
         .custom-scrollbar::-webkit-scrollbar { width: 8px; }
