@@ -31,7 +31,7 @@ export const StatusTracker = ({ records, onUpdateStatus, pendingOrders, readyOrd
                 <p className="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-widest">ID: #{item.id}</p>
               </div>
               <button 
-                onClick={() => onUpdateStatus(item.id, "ready")} 
+                onClick={() => onUpdateStatus(item.id, "Ready")} 
                 className="bg-[#4475C4] text-white text-[10px] font-black px-5 py-3 rounded-lg shadow-sm uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all shrink-0 ml-4"
               >
                 Set Ready
@@ -68,13 +68,13 @@ export const StatusTracker = ({ records, onUpdateStatus, pendingOrders, readyOrd
               {/* BACK BUTTON HAS ITS OWN PROMINENT ROW */}
               <div className="grid grid-cols-2 gap-2">
                 <button 
-                  onClick={() => onUpdateStatus(item.id, "pending")} 
+                  onClick={() => onUpdateStatus(item.id, "Pending")} 
                   className="bg-slate-100 text-slate-500 text-[10px] font-black py-3 rounded-lg uppercase tracking-widest hover:bg-red-50 hover:text-red-600 transition-all border border-slate-200 hover:border-red-200"
                 >
                   Back to Pending
                 </button>
                 <button 
-                  onClick={() => onUpdateStatus(item.id, "completed")} 
+                  onClick={() => onUpdateStatus(item.id, "Completed")} 
                   className="bg-emerald-500 text-white text-[10px] font-black py-3 rounded-lg shadow-sm uppercase tracking-widest hover:bg-emerald-600 transition-all"
                 >
                   Complete

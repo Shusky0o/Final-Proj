@@ -19,8 +19,8 @@ export default function RecordsPage() {
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [orders, setOrders] = useState<Order[]>([]);
 
-  const pendingOrders = orders.filter(o => o.status === "pending");
-  const readyOrders = orders.filter(o => o.status === "ready");
+  const pendingOrders = orders.filter(o => o.status === "Pending");
+  const readyOrders = orders.filter(o => o.status === "Ready");
 
   useEffect(() => {
     const fetchAllOrders = async () => {
@@ -42,7 +42,11 @@ export default function RecordsPage() {
         getOrderbyStatus("ready")
       ]);
 
-      setOrders([...pending, ...ready]);
+      // Capitalize status for consistency with button clicks
+      const capitalizedPending = pending.map(o => ({ ...o, status: "Pending" }));
+      const capitalizedReady = ready.map(o => ({ ...o, status: "Ready" }));
+
+      setOrders([...capitalizedPending, ...capitalizedReady]);
     };
 
     fetchAllOrders();
@@ -65,36 +69,43 @@ export default function RecordsPage() {
 
   const updateStatus = async (id, newStatus) => {
     try {
-      // 1. Ensure ID is a number if your API expects it
+      // Normalize ID to number
       const numericId = Number(id);
-      const formattedId = `#${numericId}`; // For matching the ID format in your state
 
+      // Ensure status is lowercase for API
+      const apiStatus = newStatus.toLowerCase();
+
+      // Update the API
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: numericId, status: newStatus }),
+        body: JSON.stringify({ id: numericId, status: apiStatus }),
       });
 
-      if (!response.ok) throw new Error("Failed update");
+      if (!response.ok) throw new Error("Failed to update status");
 
-      // 2. Update the single source of truth (orders state)
-      setOrders(prevOrders => {
-        if (newStatus === "completed") {
-          // If completed, remove it from the tracking list entirely
-          return prevOrders.filter(o => o.id === formattedId || o.id === numericId ? false : true);
-        }
-
-        // Otherwise, just flip the status string
-        return prevOrders.map(order => 
-          (order.id === formattedId || order.id === numericId)
-            ? { ...order, status: newStatus }
-            : order
+      if (newStatus === "Completed") {
+        // Remove from both order tracking lists
+        setOrders(prev => prev.filter(order => order.id !== numericId));
+        setDailyLogRecords(prev => prev.filter(record => record.id !== numericId));
+      } else {
+        // Update status in BOTH state arrays to keep them in sync
+        setOrders(prevOrders =>
+          prevOrders.map(order =>
+            order.id === numericId
+              ? { ...order, status: newStatus }
+              : order
+          )
         );
-      });
 
-      // Optional: If you still use a 'records' state for a master table elsewhere
-      setRecords(prev => prev.filter(r => r.id !== numericId));
-
+        setDailyLogRecords(prevRecords =>
+          prevRecords.map(record =>
+            record.id === numericId
+              ? { ...record, status: newStatus }
+              : record
+          )
+        );
+      }
     } catch (err) {
       console.error(err);
       alert("Error updating status.");
@@ -106,7 +117,9 @@ export default function RecordsPage() {
     if (!selectedOrderId) return;
     const success = await deleteOrder(selectedOrderId);
     if (success) {
+      // Update both state arrays to ensure immediate UI reflection
       setOrders(prev => prev.filter(r => r.id !== selectedOrderId));
+      setDailyLogRecords(prev => prev.filter(r => r.id !== selectedOrderId));
       setIsModalOpen(false); 
     }
   };

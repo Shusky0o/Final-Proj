@@ -81,8 +81,8 @@ export function CustomerHistory({ customers, fetchMore, hasMore, loadingMore }) 
                     <div className="flex justify-end">
                       {c.status === 'Ready' ? (
                         <span className="relative flex">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-md border-2 border-green-500 opacity-40"></span>
-                          <span className="badge-ready relative px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-widest shadow-sm">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-md border-2 border-emerald-500 opacity-40"></span>
+                          <span className="badge-ready relative px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-widest shadow-sm bg-emerald-50 text-emerald-600 border border-emerald-200">
                             {c.status}
                           </span>
                         </span>

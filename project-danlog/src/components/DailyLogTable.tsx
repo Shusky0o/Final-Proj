@@ -93,7 +93,7 @@ export function DailyLogTable({ records, onDelete, onDateChange }: DailyLogTable
                   <td className="px-6 py-7 text-center">
                     <span className={`px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-widest border shadow-sm ${
                       record.status === 'Completed' ? 'bg-white text-green-600 border-green-200' : 
-                      record.status === 'Ready' ? 'bg-white text-amber-500 border-amber-200' :
+                      record.status === 'Ready' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' :
                       'bg-white text-[#4475C4] border-blue-200'
                     }`}>
                       {record.status}
