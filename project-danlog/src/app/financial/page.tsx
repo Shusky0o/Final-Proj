@@ -3,31 +3,33 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer 
+} from 'recharts';
 import { FinancialSummary } from '../../components/FinancialSummary';
 import { ExpenseModal } from '../../components/ExpenseModal';
 import { MonthlyTimelineModal } from '../../components/MonthlyTimelineModal';
 
 export default function FinancialAnalysis() {
-  // 1. STATE MANAGEMENT
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
   const [showDisbursementModal, setShowDisbursementModal] = useState(false);
   const [activePopUpMonth, setActivePopUpMonth] = useState(null);
-  const [expenseForm, setExpenseForm] = useState({
-    name: '',
-    amount: '',
-    transaction_date: ''
-  });
+  const [expenseForm, setExpenseForm] = useState({ name: '', amount: '', transaction_date: '' });
   const [disbursementData, setDisbursementData] = useState({});
   const [revenueData, setRevenueData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
-  // 2. CONSTANTS
   const years = Array.from({ length: 11 }, (_, i) => (2025 + i).toString());
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const CURRENT_YEAR = 2026;
-  const CURRENT_MONTH_IDX = 3; // April
+  const CURRENT_MONTH_IDX = 3; 
 
-  // 3. LOGIC HELPERS
   const isFuture = (year, monthName) => {
     const y = parseInt(year);
     if (y > CURRENT_YEAR) return true;
@@ -52,7 +54,8 @@ export default function FinancialAnalysis() {
     await fetch(`${process.env.NEXT_PUBLIC_API_URL}/disbursement`, {
       method: 'POST', 
       headers: { 'Content-Type': 'application/json' }, 
-      body: JSON.stringify(expenseForm)});
+      body: JSON.stringify(expenseForm)
+    });
     setExpenseForm({ name: '', amount: '', transaction_date: '' });
   };
 
@@ -80,29 +83,42 @@ export default function FinancialAnalysis() {
     fetchData();
   }, [selectedYear]);
 
+  const chartData = months.map(m => ({
+    name: m.substring(0, 3).toUpperCase(),
+    revenue: revenueData[m]?.amount || 0,
+    expense: disbursementData[m]?.amount || 0
+  }));
+
   return (
-    <main className="h-auto bg-gradient-to-br from-[#EAEFF9] via-[#FFFFFF] to-[#D9E2F3] flex flex-col font-sans text-black relative">
+    <main className="min-h-screen bg-[#F0F4FA] flex flex-col font-sans text-slate-900 relative">
       
-      {/* HEADER SECTION (Left untouched as requested) */}
-      <div className="p-12 custom-scrollbar space-y-8 relative z-10">
+      {/* HEADER: FISCAL YEAR (LEFT) & DASHBOARD BUTTON (RIGHT) */}
+      <div className="p-12 space-y-8 relative z-10">
         <div className="max-w-[1700px] mx-auto w-full flex justify-between items-center">
-          <div className="flex bg-white/80 backdrop-blur-md border border-white rounded-2xl overflow-hidden shadow-xl">
-            <div className="px-6 py-4 font-black text-[#4475C4] uppercase text-[10px] tracking-widest border-r border-gray-100 flex items-center bg-gray-50/50">Fiscal Year</div>
+          
+          {/* Fiscal Year Selector (Back to Left) */}
+          <div className="flex bg-white border-2 border-white rounded-2xl overflow-hidden shadow-lg">
+            <div className="px-6 py-3 font-black text-[#4475C4] uppercase text-[10px] tracking-widest border-r border-slate-50 flex items-center bg-slate-50/50">
+              Fiscal Year
+            </div>
             <select 
               value={selectedYear} 
               onChange={(e) => setSelectedYear(e.target.value)} 
-              className="px-8 py-4 font-black text-[#1A2B47] text-lg outline-none bg-transparent cursor-pointer hover:bg-white transition-colors"
+              className="px-8 py-3 font-black text-[#1A2B47] text-lg outline-none bg-transparent cursor-pointer hover:bg-slate-50 transition-colors"
             >
               {years.map(y => <option key={y} value={y}>{y}</option>)}
             </select>
           </div>
+
+          {/* Dashboard Button (Kept on Right) */}
           <Link href="/">
-            <button className="bg-white border-2 border-[#4475C4] text-[#4475C4] px-8 py-3 rounded-2xl font-[1000] uppercase tracking-widest hover:bg-[#4475C4] hover:text-white transition-all shadow-lg active:scale-95">
+            <button className="bg-white border-2 border-[#4475C4] text-[#4475C4] px-8 py-3 rounded-2xl font-black uppercase tracking-widest hover:bg-[#4475C4] hover:text-white transition-all shadow-lg active:scale-95">
               ← Dashboard
             </button>
           </Link>
         </div>
 
+        {/* FINANCIAL SUMMARY CARDS */}
         <FinancialSummary 
           revenue={totalAnnualRevenue} 
           disbursement={totalAnnualDisbursement} 
@@ -110,69 +126,118 @@ export default function FinancialAnalysis() {
           isLoading={isLoading}
         />
 
-        {/* UPGRADED MONTHLY BREAKDOWN SECTION */}
-        <div className="max-w-[1700px] mx-auto w-full pb-20">
-          <div className="flex items-center gap-3 mb-8 px-4">
-            <div className="w-1.5 h-5 bg-[#4475C4]"></div>
-            <h2 className="text-[13px] font-[1000] uppercase tracking-[0.4em] text-slate-800">Monthly Performance Ledger</h2>
+        {/* DATA VISUALIZATION CHART */}
+        <div className="max-w-[1700px] mx-auto w-full">
+          <div className="bg-white rounded-[2.5rem] border border-slate-200 p-12 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)]">
+            <div className="flex justify-between items-center mb-12">
+              <div>
+                <h2 className="text-[14px] font-[1000] uppercase tracking-[0.5em] text-slate-900">Annual Performance Analytics</h2>
+                <div className="w-12 h-1 bg-[#4475C4] mt-2"></div>
+              </div>
+              <div className="flex gap-8">
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 bg-[#4475C4] rounded-full"></div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Revenue</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Expense</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="h-[350px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
+                  <XAxis 
+                    dataKey="name" 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fill: '#94A3B8', fontSize: 10, fontWeight: 900 }} 
+                    dy={15}
+                  />
+                  <YAxis 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fill: '#94A3B8', fontSize: 10, fontWeight: 900 }} 
+                  />
+                  <Tooltip 
+                    cursor={{ fill: '#F8FAFC' }}
+                    contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)', padding: '16px' }}
+                  />
+                  <Bar dataKey="revenue" fill="#4475C4" radius={[6, 6, 0, 0]} barSize={24} />
+                  <Bar dataKey="expense" fill="#EF4444" radius={[6, 6, 0, 0]} barSize={24} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+
+        {/* MONTHLY PERFORMANCE GRID */}
+        <div className="max-w-[1700px] mx-auto w-full pb-32">
+          <div className="flex items-center gap-4 mb-10 px-4">
+             <h2 className="text-[14px] font-[1000] uppercase tracking-[0.4em] text-slate-900">Audit Ledger Matrix</h2>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.04)] overflow-hidden">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-slate-50/50 border-b border-slate-200">
-                  <th className="py-6 pl-10 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Reporting Period</th>
-                  <th className="py-6 text-right text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Gross Revenue</th>
-                  <th className="py-6 text-right text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Disbursements</th>
-                  <th className="py-6 text-right text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Net Profit</th>
-                  <th className="py-6 pr-10 text-right text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Audit</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {months.map((month) => {
-                  const rowIsFuture = isFuture(selectedYear, month);
-                  const rev = revenueData[month]?.amount || 0;
-                  const exp = disbursementData[month]?.amount || 0;
-                  const net = rev - exp;
-                  
-                  return (
-                    <tr 
-                      key={month} 
-                      onClick={() => !rowIsFuture && setActivePopUpMonth(month)}
-                      className={`group transition-all ${
-                        rowIsFuture 
-                        ? 'opacity-30 cursor-not-allowed bg-slate-50/10' 
-                        : 'cursor-pointer hover:bg-slate-50/80'
-                      }`}
-                    >
-                      <td className="py-6 pl-10">
-                        <div className="flex items-center gap-4">
-                          <div className={`w-1 h-5 rounded-full transition-all ${rowIsFuture ? 'bg-slate-200' : 'bg-slate-100 group-hover:bg-[#4475C4]'}`}></div>
-                          <span className="font-black text-slate-900 uppercase tracking-tighter text-lg">{month}</span>
-                        </div>
-                      </td>
-                      <td className="py-6 text-right font-black text-emerald-600">₱{rev.toLocaleString()}</td>
-                      <td className="py-6 text-right font-black text-red-500">₱{exp.toLocaleString()}</td>
-                      <td className={`py-6 text-right font-black ${net >= 0 ? 'text-slate-900' : 'text-red-700'}`}>
-                        ₱{net.toLocaleString()}
-                      </td>
-                      <td className="py-6 pr-10 text-right">
-                        <div className="flex items-center justify-end gap-3">
-                          <span className="text-[10px] font-black uppercase text-slate-300 group-hover:text-[#4475C4] tracking-[0.2em] transition-colors">
-                             {rowIsFuture ? 'Locked' : 'Open Log'}
-                          </span>
-                          {!rowIsFuture && (
-                            <div className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-[#4475C4] group-hover:text-white transition-all">
-                              <span className="text-xs">→</span>
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
+            {months.map((month, idx) => {
+              const rowIsFuture = isFuture(selectedYear, month);
+              const rev = revenueData[month]?.amount || 0;
+              const exp = disbursementData[month]?.amount || 0;
+              const net = rev - exp;
+              const profitMargin = rev > 0 ? ((net / rev) * 100).toFixed(0) : 0;
+              
+              return (
+                <div 
+                  key={month}
+                  onClick={() => !rowIsFuture && setActivePopUpMonth(month)}
+                  className={`relative bg-white rounded-3xl border-2 transition-all duration-300 group overflow-hidden ${
+                    rowIsFuture 
+                    ? 'opacity-40 cursor-not-allowed grayscale border-slate-100' 
+                    : 'cursor-pointer border-transparent hover:border-[#4475C4] shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.1)] hover:-translate-y-1'
+                  }`}
+                >
+                  <div className="p-8">
+                    <div className="flex justify-between items-start mb-10">
+                      <div>
+                        <p className="text-[9px] font-black text-[#4475C4] uppercase tracking-widest mb-1">Period {(idx + 1).toString().padStart(2, '0')}</p>
+                        <h3 className="text-2xl font-[1000] text-slate-900 uppercase tracking-tighter leading-none">{month}</h3>
+                      </div>
+                      <div className={`w-2 h-2 rounded-full ${rowIsFuture ? 'bg-slate-200' : 'bg-emerald-500 animate-pulse'}`}></div>
+                    </div>
+
+                    <div className="space-y-4 mb-8">
+                      <div className="flex justify-between">
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Inflow</span>
+                        <span className="text-sm font-black text-slate-900 uppercase tracking-tighter">₱{rev.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Outflow</span>
+                        <span className="text-sm font-black text-red-500 uppercase tracking-tighter">₱{exp.toLocaleString()}</span>
+                      </div>
+                      <div className="pt-4 border-t border-slate-50 flex justify-between items-end">
+                        <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Net Profit</span>
+                        <span className={`text-xl font-[1000] tracking-tighter ${net >= 0 ? 'text-[#4475C4]' : 'text-red-700'}`}>
+                          ₱{net.toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="relative h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                       <div 
+                         className={`h-full transition-all duration-1000 ${net >= 0 ? 'bg-[#4475C4]' : 'bg-red-500'}`}
+                         style={{ width: `${Math.min(Math.max(Math.abs(profitMargin), 5), 100)}%` }}
+                       />
+                    </div>
+                    <div className="flex justify-between mt-2">
+                       <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Efficiency</span>
+                       <span className="text-[9px] font-black text-slate-900 uppercase">{profitMargin}%</span>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>

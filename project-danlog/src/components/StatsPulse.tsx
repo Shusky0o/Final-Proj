@@ -70,7 +70,6 @@ export const StatsPulse = ({ pendingCount, todayRevenue, monthlyRevenue, isLoadi
               <span className="text-3xl md:text-4xl font-black text-[#1A2B47]">
                 ₱{todayRevenue?.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
               </span>
-              <span className="bg-green-100 text-green-600 text-[10px] px-2 py-0.5 rounded-md font-black italic">+12%</span>
             </>
           )}
         </div>

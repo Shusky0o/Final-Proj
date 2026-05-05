@@ -57,7 +57,7 @@ export const DashboardHeader = ({
           
           {showReminders && (
             <div className="absolute top-full mt-4 right-0 w-80 bg-white rounded-[2rem] shadow-2xl p-6 border border-gray-100 z-[110]">
-              <h3 className="font-black uppercase italic text-[#4475C4] mb-4 text-xs tracking-[0.2em]">Admin Checklist</h3>
+              <h3 className="font-black uppercase text-[#4475C4] mb-4 text-xs tracking-[0.2em]">Admin Checklist</h3>
               <form onSubmit={addReminder} className="mb-4 flex gap-2">
                 <input 
                   type="text" 
